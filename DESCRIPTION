@@ -1,0 +1,13 @@
+Package: mljar
+Title: R mljar.com API wrapper 
+Version: 0.0.1
+Authors@R: person("Dominik", "Krzeminski", email = "toadd@later.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph). TO BE UPDATED
+Depends: R (>= 3.3.2)
+License: Apache License, Version 2.0
+Encoding: UTF-8
+LazyData: true
+Imports:
+    RCurl,
+    jsonlite
+Suggests: testthat
