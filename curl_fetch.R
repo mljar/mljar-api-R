@@ -1,5 +1,7 @@
 library("RCurl")
-library("rjson")
+library("httr")
+
+library("jsonlite")
 
 token <- "510145da007dfb92c6395d4cce441d8cc7e7e868"
 resp <- getURL("https://mljar.com/api/v1/projects", 
