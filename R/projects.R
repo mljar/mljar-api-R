@@ -31,12 +31,34 @@ get_project <- function(hid) {
 
   structure(
     list(
-      projects = parsed,
+      project = parsed,
       response = resp
     ),
     class = "get_project"
   )
 }
+
+print.get_project <- function(x, ...) {
+  cat("<MLJAR project >\n", sep = "")
+  str(x$project)
+  invisible(x)
+}
+
+create_project <-function(title, task, description=''){
+  #' creates project
+  token <- .get_token()
+  api_url_projects <- paste("https://mljar.com/api/", api_version, "/projects" , sep="")
+  data <- list(hardware = 'cloud',
+               scope = 'private',
+               task = task,
+               compute_now = 0,
+               description = description)
+  resp <- POST(api_url_projects, add_headers(Authorization = paste("Token", token)),
+       body = data, encode = "json")
+  .check_response_status(resp, 201)
+  }
+
+####################### Helper functions
 
 .get_json_from_query <- function(query){
   # returns api response and parsed output
@@ -44,7 +66,21 @@ get_project <- function(hid) {
   resp <- GET(query, add_headers(Authorization = paste("Token", token)))
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   
-  if (status_code(resp) != 200) {
+  .check_response_status(resp, 200)
+
+    return(list(resp=resp, parsed=parsed))
+}
+
+.get_token <- function(){
+  token <- Sys.getenv("MLJAR_TOKEN")
+  if (nchar(token)==0) {
+    stop("Specify MLJAR_TOKEN env variable", call. = FALSE)
+  }
+  return(token)
+}
+
+.check_response_status(resp, expected_code){
+  if (status_code(resp) != expected_code) {
     stop(
       sprintf(
         "MLJAR API request failed [%s]\n%s\n<%s>", 
@@ -55,13 +91,4 @@ get_project <- function(hid) {
       call. = FALSE
     )
   }
-  return(list(resp=resp, parsed=parsed))
-}
-
-.get_token <- function(){
-  token <- Sys.getenv("MLJAR_TOKEN")
-  if (nchar(token)==0) {
-    stop("Specify MLJAR_TOKEN env variable", call. = FALSE)
-  }
-  return(token)
 }
