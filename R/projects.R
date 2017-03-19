@@ -47,16 +47,32 @@ print.get_project <- function(x, ...) {
 create_project <-function(title, task, description=''){
   #' creates project
   token <- .get_token()
+  api_version <- "v1"
   api_url_projects <- paste("https://mljar.com/api/", api_version, "/projects" , sep="")
-  data <- list(hardware = 'cloud',
+  data <- list(title = title,
+               hardware = 'cloud',
                scope = 'private',
                task = task,
                compute_now = 0,
                description = description)
   resp <- POST(api_url_projects, add_headers(Authorization = paste("Token", token)),
-       body = data, encode = "json")
+               body = data, encode = "form")
   .check_response_status(resp, 201)
+  if (status_code(resp)==201){
+    sprintf("Project '%s' succesfully created!", title)
   }
+}
+
+delete_project <-function(hid){
+  #' deletes project
+  token <- .get_token()
+  api_version <- "v1"
+  api_url_project_hid <- paste("https://mljar.com/api/", api_version, "/projects/", hid, sep="")
+  resp <- DELETE(api_url_project_hid, add_headers(Authorization = paste("Token", token)))
+  if (status_code(resp)==204 || status_code(resp)==200){
+    sprintf("Project <%s> succesfully deleted!", hid)
+  }
+}
 
 ####################### Helper functions
 
@@ -68,7 +84,7 @@ create_project <-function(title, task, description=''){
   
   .check_response_status(resp, 200)
 
-    return(list(resp=resp, parsed=parsed))
+  return(list(resp=resp, parsed=parsed))
 }
 
 .get_token <- function(){
@@ -79,14 +95,12 @@ create_project <-function(title, task, description=''){
   return(token)
 }
 
-.check_response_status(resp, expected_code){
+.check_response_status <- function(resp, expected_code){
   if (status_code(resp) != expected_code) {
     stop(
       sprintf(
-        "MLJAR API request failed [%s]\n%s\n<%s>", 
-        status_code(resp),
-        parsed$message,
-        parsed$documentation_url
+        "MLJAR API request failed [%s]\n",
+        status_code(resp)
       ),
       call. = FALSE
     )
