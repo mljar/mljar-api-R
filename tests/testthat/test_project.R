@@ -21,6 +21,7 @@ test_that("test create_project and get_projects", {
 
 test_that("test delete_project and get_projects", {
   gp <- get_projects()
+  # here we search for project named a
   for(i in 1:length(gp$projects)) {
     if (gp$projects[[i]]$title=="a"){
       break
@@ -32,7 +33,7 @@ test_that("test delete_project and get_projects", {
   expect_equal(length(gp$projects), 1)
 })
 
-test_that("test get_project and delete_project", {
+test_that("test get_project, delete_project and get_projects", {
   gp <- get_projects()
   hid <- gp$projects[[1]]$hid
   pr <- get_project(hid)
