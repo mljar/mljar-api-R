@@ -9,5 +9,6 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     RCurl,
-    jsonlite
+    jsonlite,
+    readr
 Suggests: testthat

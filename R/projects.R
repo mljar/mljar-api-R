@@ -88,6 +88,7 @@ delete_project <-function(hid){
 }
 
 .get_token <- function(){
+  # returns token defined in enviromental variables
   token <- Sys.getenv("MLJAR_TOKEN")
   if (nchar(token)==0) {
     stop("Specify MLJAR_TOKEN env variable", call. = FALSE)
@@ -95,11 +96,13 @@ delete_project <-function(hid){
   return(token)
 }
 
-.check_response_status <- function(resp, expected_code){
+.check_response_status <- function(resp, expected_code,
+                                   error_message="MLJAR API request failed"){
+  # compares response status with expeced_code and returns error_message if not equal
   if (status_code(resp) != expected_code) {
     stop(
       sprintf(
-        "MLJAR API request failed [%s]\n",
+        paste(error_message, "[%s]\n"),
         status_code(resp)
       ),
       call. = FALSE

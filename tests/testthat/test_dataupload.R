@@ -1,5 +1,5 @@
 library(mljar)
-context("Test API projects")
+context("Test API data upload")
 
 .get_token <- function(){
   # returns token of test account

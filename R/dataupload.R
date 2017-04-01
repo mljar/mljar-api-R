@@ -1,8 +1,17 @@
+
 upload_file <- function(projecthid, filepath){
-  
+  # uploads file into MLJAR and returns destination path
+  parsed <- .get_signed_url(projecthid, filepath)
+  signed_url <- parsed$signed_url
+  dst_path <- parsed$destination_path
+  plain_text_data <- read_file(path)
+  resp <- PUT(signed_url, body=plain_text_data)
+  .check_response_status(resp, 200, "Upload into MLJAR failed")
+  return(dst_path)
 }
 
 .get_signed_url <- function(projecthid, filepath){
+  # from given project hid and filepath returns signed url for uploading
   api_version <- "v1"
   api_url_signed_url <- paste("https://mljar.com/api/", api_version, "/s3policy/" , sep="")
   fname = tail(strsplit(filepath, "/")[[1]], n=1)
@@ -13,7 +22,6 @@ upload_file <- function(projecthid, filepath){
   parsed <- rp$parsed
   return(parsed)
 }
-
 
 ####################### Helper functions
 
