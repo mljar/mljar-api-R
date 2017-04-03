@@ -1,7 +1,6 @@
 get_projects <- function() {
   #' Gets list of available projects
-  api_version <- "v1"
-  api_url_projects <- paste("https://mljar.com/api/", api_version, "/projects" , sep="")
+  api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
   rp <- .get_json_from_get_query(api_url_projects)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -23,8 +22,7 @@ print.get_projects <- function(x, ...) {
 
 get_project <- function(hid) {
   #' Get data from a project of specified hid
-  api_version <- "v1"
-  api_url_project_hid <- paste("https://mljar.com/api/", api_version, "/projects/", hid, sep="")
+  api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
   rp <- .get_json_from_get_query(api_url_project_hid)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -47,8 +45,7 @@ print.get_project <- function(x, ...) {
 create_project <-function(title, task, description=''){
   #' creates project
   token <- .get_token()
-  api_version <- "v1"
-  api_url_projects <- paste("https://mljar.com/api/", api_version, "/projects" , sep="")
+  api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
   data <- list(title = title,
                hardware = 'cloud',
                scope = 'private',
@@ -66,8 +63,7 @@ create_project <-function(title, task, description=''){
 delete_project <-function(hid){
   #' deletes project
   token <- .get_token()
-  api_version <- "v1"
-  api_url_project_hid <- paste("https://mljar.com/api/", api_version, "/projects/", hid, sep="")
+  api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
   resp <- DELETE(api_url_project_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
     sprintf("Project <%s> succesfully deleted!", hid)

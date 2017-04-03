@@ -12,8 +12,7 @@ upload_file <- function(projecthid, filepath){
 
 .get_signed_url <- function(projecthid, filepath){
   # from given project hid and filepath returns signed url for uploading
-  api_version <- "v1"
-  api_url_signed_url <- paste("https://mljar.com/api/", api_version, "/s3policy/" , sep="")
+  api_url_signed_url <- paste("https://mljar.com/api/", API_VERSION, "/s3policy/" , sep="")
   fname = tail(strsplit(filepath, "/")[[1]], n=1)
   data <- list(project_hid = projecthid,
                fname = fname)
