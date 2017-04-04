@@ -86,7 +86,7 @@ delete_project <-function(hid){
 .get_token <- function(){
   # returns token defined in enviromental variables
   token <- Sys.getenv("MLJAR_TOKEN")
-  if (nchar(token)==0) {
+  if (identical(token, "")) {
     stop("Specify MLJAR_TOKEN env variable", call. = FALSE)
   }
   return(token)
