@@ -27,7 +27,7 @@ upload_file <- function(projecthid, filepath){
 .get_json_from_post_query <- function(query, data){
   # returns api response and parsed output from POST query given data
   token <- .get_token()
-  resp <- POST(api_url_signed_url, add_headers(Authorization = paste("Token", token)),
+  resp <- POST(query, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   
