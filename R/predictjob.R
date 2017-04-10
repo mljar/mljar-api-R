@@ -1,4 +1,4 @@
-submit_prdict_job <- function(project_hid, dataset_hid, result_hid){
+submit_predict_job <- function(project_hid, dataset_hid, result_hid){
   
   data <- list( predict_params = list(project_id =  project_hid,
                                 project_hardware = 'cloud',
