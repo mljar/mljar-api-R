@@ -4,7 +4,7 @@ get_datasets <- function() {
   rp <- .get_json_from_get_query(api_url_datasets)
   resp <- rp$resp
   parsed <- rp$parsed
-  
+
   structure(
     list(
       datasets = parsed,
@@ -26,7 +26,7 @@ get_dataset <- function(hid) {
   rp <- .get_json_from_get_query(api_url_dataset_hid)
   resp <- rp$resp
   parsed <- rp$parsed
-  
+
   structure(
     list(
       dataset = parsed,
@@ -42,3 +42,6 @@ print.get_dataset <- function(x, ...) {
   invisible(x)
 }
 
+add_new_dataset <- function(project_hid, dataset, title_prefix="dataset-"){
+
+}

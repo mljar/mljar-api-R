@@ -4,7 +4,7 @@ upload_file <- function(projecthid, filepath){
   parsed <- .get_signed_url(projecthid, filepath)
   signed_url <- parsed$signed_url
   dst_path <- parsed$destination_path
-  plain_text_data <- read_file(path)
+  plain_text_data <- readr::read_file(filepath)
   resp <- PUT(signed_url, body=plain_text_data)
   .check_response_status(resp, 200, "Upload into MLJAR failed")
   return(dst_path)
@@ -30,8 +30,8 @@ upload_file <- function(projecthid, filepath){
   resp <- POST(query, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
-  
+
   .check_response_status(resp, 200)
-  
+
   return(list(resp=resp, parsed=parsed))
 }

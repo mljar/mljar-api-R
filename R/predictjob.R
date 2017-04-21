@@ -13,7 +13,5 @@ submit_predict_job <- function(project_hid, dataset_hid, result_hid){
   resp <- rp$resp
   parsed <- rp$parsed
   return(parsed)
-  
     .check_response_status(resp, 200, "Upload into MLJAR failed")
-  
 }
