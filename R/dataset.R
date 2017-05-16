@@ -88,11 +88,11 @@ add_new_dataset <- function(project_hid, filename, title){
 #'
 #'  Waits till all datasets is valid. If all valid it returns no error,
 #' if wait time is exceeded and there is any dataset not valid then
-#' it stops.
+#' it returns TRUE.
 #'
 #' @param project_hid hid of the project
 #'
-#' @return no error if all datasets are valid
+#' @return TRUE if all datasets are valid
 #'
 .wait_till_all_datasets_are_valid <-function(project_hid){
   total_checks  <- 120
@@ -100,7 +100,8 @@ add_new_dataset <- function(project_hid, filename, title){
   for (i in 1:total_checks){
     datasets_list <- get_datasets(project_hid)
     if (is.null(datasets_list)){
-      stop("No datasets")
+      sprintf("No datasets")
+      return(TRUE)
     } else {
       tmpcnt = 0
       for (k in 1:length(dl$datasets)){
@@ -108,9 +109,10 @@ add_new_dataset <- function(project_hid, filename, title){
       }
       if (tmpcnt == length(dl$datasets)){
         sprintf("All datasets are valid")
-        break
+        return(TRUE)
       }
     }
     Sys.sleep(time_interval)
   }
+  stop("Some datasets are invalid.")
 }
