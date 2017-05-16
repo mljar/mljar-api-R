@@ -80,7 +80,8 @@ add_new_dataset <- function(project_hid, filename, title){
   if (status_code(resp)==201){
     sprintf("Dataset created!")
   }
-
+  dataset_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  return(dataset_details)
 }
 
 
@@ -115,4 +116,46 @@ add_new_dataset <- function(project_hid, filename, title){
     Sys.sleep(time_interval)
   }
   stop("Some datasets are invalid.")
+}
+
+#' Verify if columns have correct structure
+#'
+#' At least one column must be Target and this is verified on server site.
+#'
+#' @param dataset_hid dataset hid code
+#'
+#' @return TRUE if correct, FALSE if not
+#'
+#' @examples
+#' .accept_dataset_column_usage("o6sPdh5Xad")
+.accept_dataset_column_usage <- function(dataset_hid){
+  token <- .get_token()
+  api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/accept_column_usage/" , sep="")
+  data <- list(dataset_id = dataset_hid)
+  resp <- POST(api_url_new_dataset, add_headers(Authorization = paste("Token", token)),
+               body = data, encode = "form")
+  return(ifelse(status_code(resp)==200, TRUE, FALSE))
+}
+
+add_dataset_if_not_exists <- function(project_hid, filename, title){
+  .wait_till_all_datasets_are_valid(project_hid)
+  ds <- get_datasets(project_hid)
+  for(i in 1:length(ds$datasets)) {
+    if (ds$datasets[[i]]$title==title){
+      stop("Dataset with the same name already exists")
+    }
+  }
+  dataset_details <- add_new_dataset(project_hid, filename, title)
+  .wait_till_all_datasets_are_valid(project_hid)
+  if (!.accept_dataset_column_usage(dataset_details$hid)){
+    stop("There was a problem with accept column usage for your dataset.")
+  }
+  new_dataset <- get_dataset(dataset_details$hid)
+  if (!new_dataset$dataset$valid){
+    stop("Sorry, your dataset can not be read by MLJAR.\nPlease report this to us - we will fix it")
+  }
+  if (is.null(new_dataset$dataset$column_usage_min)){
+    stop("Something bad happend! There is no attributes usage defined for your dataset")
+  }
+  return(new_dataset)
 }
