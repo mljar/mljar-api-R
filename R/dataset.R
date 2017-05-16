@@ -105,10 +105,10 @@ add_new_dataset <- function(project_hid, filename, title){
       return(TRUE)
     } else {
       tmpcnt = 0
-      for (k in 1:length(dl$datasets)){
-        tmpcnt = tmpcnt + dl$datasets[[k]]$valid
+      for (k in 1:length(datasets_list$datasets)){
+        tmpcnt = tmpcnt + datasets_list$datasets[[k]]$valid
       }
-      if (tmpcnt == length(dl$datasets)){
+      if (tmpcnt == length(datasets_list$datasets)){
         sprintf("All datasets are valid")
         return(TRUE)
       }
@@ -152,7 +152,7 @@ add_dataset_if_not_exists <- function(project_hid, filename, title){
   }
   new_dataset <- get_dataset(dataset_details$hid)
   if (!new_dataset$dataset$valid){
-    stop("Sorry, your dataset can not be read by MLJAR.\nPlease report this to us - we will fix it")
+    stop("Sorry, your dataset cannot be read by MLJAR.\nPlease report this to us - we will fix it")
   }
   if (is.null(new_dataset$dataset$column_usage_min)){
     stop("Something bad happend! There is no attributes usage defined for your dataset")

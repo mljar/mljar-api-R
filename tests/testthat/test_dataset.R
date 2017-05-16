@@ -15,7 +15,7 @@ hid <- gp$projects[[i]]$hid
 test_that("test add_new_dataset", {
   file_from_resources <- "resources/binary_part_iris_converted.csv"
   expect_error(add_new_dataset(hid, file_from_resources, "title"), NA)
-  Sys.sleep(5) # to ensure that project is created
+  Sys.sleep(3) # to ensure that project is created
 })
 
 
@@ -36,3 +36,4 @@ test_that("test delete_dataset", {
 })
 
 delete_project(hid)
+
