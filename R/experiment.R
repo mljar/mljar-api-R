@@ -67,7 +67,29 @@ create_experiment <- function(title, description, metric, validation_scheme, tas
   }
 }
 
-add_experiment_if_not_exists <- function(validation_dataset, ...){
-
+add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_dataset, experiment_title,
+                                         project_task, validation_kfolds, validation_shuffle,
+                                         validation_stratify, validation_train_split, algorithms, metric,
+                                         tuning_mode, time_constraint, create_ensemble){
+  if (!is.null(valid_dataset)){
+    validation = "With dataset"
+  } else {
+    if (!is.null(validation_train_split)){
+      percents = round(validation_train_split * 100)
+      validation = paste0("Split ", percents , "/", 100-percents)
+    } else{
+      validation = paste0(validation_kfolds, "-fold CV")
+    }
+    if (validation_shuffle){
+      validation = paste0(validation, ", Shuffle")
+    }
+    if (validation_stratify && project_task == 'bin_class'){
+      validation = paste0(validation, ", Stratify")
+    }
+    if (validation_stratify && project_task != 'bin_class'){
+      warning("Cannot use stratify in validation for your project task.
+              Omitting this option in validation.")
+    }
+  }
 
 }

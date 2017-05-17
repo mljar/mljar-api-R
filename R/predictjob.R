@@ -1,5 +1,5 @@
 submit_predict_job <- function(project_hid, dataset_hid, result_hid){
-  
+
   data <- list(predict_params = toJSON(list(project_id =  project_hid,
                                             project_hardware = 'cloud',
                                             algorithms_ids = list(result_hid),
@@ -13,5 +13,5 @@ submit_predict_job <- function(project_hid, dataset_hid, result_hid){
   resp <- rp$resp
   parsed <- rp$parsed
   return(parsed)
-    .check_response_status(resp, 200, "Upload into MLJAR failed")
+    .check_response_status(resp, 200, "Predict MLJAR job failed")
 }
