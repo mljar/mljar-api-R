@@ -45,7 +45,7 @@ print.get_dataset <- function(x, ...) {
 delete_dataset <-function(dataset_hid){
   #' deletes project
   token <- .get_token()
-  api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", hid, sep="")
+  api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
   resp <- DELETE(api_url_dataset_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
     sprintf("Project <%s> succesfully deleted!", hid)
@@ -100,7 +100,7 @@ add_new_dataset <- function(project_hid, filename, title){
   time_interval <- 5 # sleep for 5 sec every iteration
   for (i in 1:total_checks){
     datasets_list <- get_datasets(project_hid)
-    if (is.null(datasets_list)){
+    if (length(datasets_list$datasets) == 0){
       sprintf("No datasets")
       return(TRUE)
     } else {
@@ -126,8 +126,6 @@ add_new_dataset <- function(project_hid, filename, title){
 #'
 #' @return TRUE if correct, FALSE if not
 #'
-#' @examples
-#' .accept_dataset_column_usage("o6sPdh5Xad")
 .accept_dataset_column_usage <- function(dataset_hid){
   token <- .get_token()
   api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/accept_column_usage/" , sep="")
@@ -140,9 +138,11 @@ add_new_dataset <- function(project_hid, filename, title){
 add_dataset_if_not_exists <- function(project_hid, filename, title){
   .wait_till_all_datasets_are_valid(project_hid)
   ds <- get_datasets(project_hid)
-  for(i in 1:length(ds$datasets)) {
-    if (ds$datasets[[i]]$title==title){
-      stop("Dataset with the same name already exists")
+  if (length(ds$datasets)>0){
+    for(i in 1:length(ds$datasets)) {
+      if (ds$datasets[[i]]$title==title){
+        stop("Dataset with the same name already exists")
+      }
     }
   }
   dataset_details <- add_new_dataset(project_hid, filename, title)
