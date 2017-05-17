@@ -12,6 +12,6 @@ submit_predict_job <- function(project_hid, dataset_hid, result_hid){
   rp <- .get_json_from_post_query(query, data)
   resp <- rp$resp
   parsed <- rp$parsed
+  .check_response_status(resp, 200, "Predict MLJAR job failed")
   return(parsed)
-    .check_response_status(resp, 200, "Predict MLJAR job failed")
 }

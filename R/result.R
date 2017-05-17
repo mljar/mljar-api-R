@@ -1,4 +1,3 @@
-
 get_results <- function(project_hid, experiment_hid){
   #' Get results - list all models.
   api_url_results <- paste("https://mljar.com/api/", API_VERSION, "/results/" , sep="")
@@ -10,7 +9,7 @@ get_results <- function(project_hid, experiment_hid){
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   structure(
     list(
-      projects = parsed,
+      results = parsed,
       response = resp
     ),
     class = "get_results"
