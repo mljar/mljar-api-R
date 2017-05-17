@@ -23,9 +23,9 @@ print.get_experiments <- function(x, ...) {
 
 get_experiment <- function(experiment_hid){
   #' Gets experiment details
-  api_url_experiments <- paste("https://mljar.com/api/", API_VERSION, "/experiments/",
+  api_url_experiment <- paste("https://mljar.com/api/", API_VERSION, "/experiments/",
                                experiment_hid, sep="")
-  rp <- .get_json_from_get_query(api_url_experiments)
+  rp <- .get_json_from_get_query(api_url_experiment)
   resp <- rp$resp
   parsed <- rp$parsed
 
@@ -98,14 +98,14 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
   # set default preprocessing if needed
   dataset_preproc <- list()
 
-  if (length(train_dataset$dataset$column_usage_min['cols_to_fill_na']) > 0){
+  if (length(train_dataset$column_usage_min['cols_to_fill_na']) > 0){
     dataset_preproc$na_fill <- "na_fill_median"
   }
-  if (length(train_dataset$dataset$column_usage_min['cols_to_convert_categorical']) > 0){
+  if (length(train_dataset$column_usage_min['cols_to_convert_categorical']) > 0){
     dataset_preproc$convert_categorical <- "categorical_to_int"
   }
   expt_params <- list(
-    train_dataset = list(id = train_dataset$dataset$hid, title = train_dataset$dataset$title),
+    train_dataset = list(id = train_dataset$hid, title = train_dataset$title),
     algs = algorithms,
     preproc = dataset_preproc,
     single_limit = time_constraint,
@@ -114,7 +114,7 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
     hill_climbing_cnt =  MLJAR_TUNING_MODES[tuning_mode]["hill_climbing_cnt"]
   )
   if (!is.null(valid_dataset)){
-    expt_params$vald_dataset = list(id = valid_dataset$dataset$hid, title = valid_dataset$dataset$title)
+    expt_params$vald_dataset = list(id = valid_dataset$hid, title = valid_dataset$title)
   }
 
   # checks whether title of experiment is different
@@ -126,7 +126,7 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
       }
     }
   }
-  params <- jsonlite::toJSON(expt_params)
+  params <- jsonlite::toJSON(expt_params, auto_unbox =TRUE)
   #' if everything is fine untill this point we can create data list to
   #' build a new experiment
   experiment_data <- list(title =  experiment_title,
@@ -138,5 +138,5 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
                           parent_project = project_hid,
                           params = params
                           )
-  create_experiment(project_hid, experiment_data)
+  create_experiment(experiment_data)
 }

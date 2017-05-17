@@ -1,7 +1,7 @@
 library(mljar)
 context("Test API dataset")
 
-task <- "Binary Classification"
+task <- "bin_class"
 create_project('ds', task, 'some description')
 gp <- get_projects()
 for(i in 1:length(gp$projects)) {

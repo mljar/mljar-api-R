@@ -48,7 +48,7 @@ delete_dataset <-function(dataset_hid){
   api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
   resp <- DELETE(api_url_dataset_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
-    sprintf("Project <%s> succesfully deleted!", hid)
+    sprintf("Dataset <%s> succesfully deleted!", hid)
   }
 }
 
