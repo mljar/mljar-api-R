@@ -12,11 +12,20 @@ test_that("test get_projects", {
 })
 
 test_that("test create_project and get_projects", {
-  task <- "Binary Classification"
-  expect_match(create_project('a', task,'description a'), "Project 'a' succesfully created!")
-  expect_match(create_project('b', task,'description b'), "Project 'b' succesfully created!")
+  task <- "bin_class"
+  expect_match(create_project("a", task, "description a"),
+               "Project 'a' succesfully created!")
+  expect_match(create_project("b", task, "description b"),
+               "Project 'b' succesfully created!")
   gp <- get_projects()
   expect_equal(length(gp$projects), 2)
+})
+
+test_that("test .verify_if_project_exists", {
+  task <- "bin_class"
+  .verify_if_project_exists
+  expect_error(.verify_if_project_exists("a", task),
+               "Project with the same title and task already exists, change name.")
 })
 
 test_that("test delete_project and get_projects", {

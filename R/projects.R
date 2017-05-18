@@ -4,7 +4,7 @@ get_projects <- function() {
   rp <- .get_json_from_get_query(api_url_projects)
   resp <- rp$resp
   parsed <- rp$parsed
-  
+
   structure(
     list(
       projects = parsed,
@@ -42,8 +42,21 @@ print.get_project <- function(x, ...) {
   invisible(x)
 }
 
+# checks if there is no project with the same name and task
+.verify_if_project_exists <- function(projtitle, task){
+  gp <- get_projects()
+  for (proj in gp$projects){
+    if (proj$title==projtitle && proj$task==task){
+      stop("Project with the same title and task already exists, change name.")
+    }
+  }
+  return(TRUE)
+}
+
+
 create_project <-function(title, task, description=''){
-  #' creates project
+  #' creates a new project
+  .verify_if_project_exists(title, task)
   token <- .get_token()
   api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
   data <- list(title = title,
@@ -77,7 +90,7 @@ delete_project <-function(hid){
   token <- .get_token()
   resp <- GET(query, add_headers(Authorization = paste("Token", token)))
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
-  
+
   .check_response_status(resp, 200)
 
   return(list(resp=resp, parsed=parsed))
