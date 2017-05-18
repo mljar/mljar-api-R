@@ -57,7 +57,7 @@ add_new_dataset <- function(project_hid, filename, title){
   dst_path <- upload_file(project_hid, filename)
 
   # TODO check if prediction only
-  prediction_only <- 1
+  prediction_only <- 0
 
   token <- .get_token()
   api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/datasets" , sep="")

@@ -97,13 +97,14 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
   }
   # set default preprocessing if needed
   dataset_preproc <- list()
-
+  dataset_preproc$na_fill <- "na_fill_median"
   if (length(train_dataset$column_usage_min['cols_to_fill_na']) > 0){
     dataset_preproc$na_fill <- "na_fill_median"
   }
   if (length(train_dataset$column_usage_min['cols_to_convert_categorical']) > 0){
     dataset_preproc$convert_categorical <- "categorical_to_int"
   }
+  if (length(dataset_preproc)==0) dataset_preproc={}
   expt_params <- list(
     train_dataset = list(id = train_dataset$hid, title = train_dataset$title),
     algs = algorithms,
