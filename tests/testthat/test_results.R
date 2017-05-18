@@ -31,10 +31,10 @@ exp <- add_experiment_if_not_exists(hid, dataset1$dataset, NULL, "exp",
                                     pr_task, validation_kfolds, validation_shuffle,
                                     validation_stratify, validation_train_split, algorithms, metric,
                                     tuning_mode, time_constraint, create_ensemble)
-
 test_that("test get_results", {
+  sleep(3) # wait till experiment is initiated
   r<-get_results(hid,exp$hid)
-  expect_equal(length(r$results), 14)
+  expect_equal(length(r$results), 5)
 })
 
 delete_project(hid)
