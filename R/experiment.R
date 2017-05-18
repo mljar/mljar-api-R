@@ -110,8 +110,8 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
     preproc = dataset_preproc,
     single_limit = time_constraint,
     ensemble = create_ensemble,
-    random_start_cnt = MLJAR_TUNING_MODES[tuning_mode]["random_start_cnt"],
-    hill_climbing_cnt =  MLJAR_TUNING_MODES[tuning_mode]["hill_climbing_cnt"]
+    random_start_cnt = MLJAR_TUNING_MODES[[tuning_mode]][["random_start_cnt"]],
+    hill_climbing_cnt =  MLJAR_TUNING_MODES[[tuning_mode]][["hill_climbing_cnt"]]
   )
   if (!is.null(valid_dataset)){
     expt_params$vald_dataset = list(id = valid_dataset$hid, title = valid_dataset$title)

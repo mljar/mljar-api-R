@@ -15,25 +15,27 @@ pr_task <- gp$projects[[i]]$task
 file_from_resources <- "resources/binary_part_iris_converted.csv"
 dataset1 <- add_new_dataset(hid, file_from_resources, "test-exp")
 
-validation_kfolds = 5
-validation_shuffle = TRUE
-validation_stratify = TRUE
-validation_train_split = NULL
-algorithms = c('xgb')
-metric = 'logloss'
-tuning_mode = 'Normal'
-time_constraint = 1
-create_ensemble = FALSE
+validation_kfolds <- 5
+validation_shuffle <- TRUE
+validation_stratify <-TRUE
+validation_train_split <- NULL
+validation <- "5-fold CV, Shuffle, Stratify"
+algorithms <- c("xgb")
+metric <- "logloss"
+tuning_mode <- "Normal"
+time_constraint <- 1
+create_ensemble <- FALSE
+dataset_preproc <- list()
 
 test_that("test create_experiment", {
   params <- list(
     train_dataset = list(id = dataset1$hid, title = dataset1$title),
-    algs = algorithms,
+    algs = c(algorithms,""),
     preproc = dataset_preproc,
     single_limit = time_constraint,
     ensemble = create_ensemble,
-    random_start_cnt = MLJAR_TUNING_MODES[tuning_mode]["random_start_cnt"],
-    hill_climbing_cnt =  MLJAR_TUNING_MODES[tuning_mode]["hill_climbing_cnt"]
+    random_start_cnt = MLJAR_TUNING_MODES[[tuning_mode]][["random_start_cnt"]],
+    hill_climbing_cnt =  MLJAR_TUNING_MODES[[tuning_mode]][["hill_climbing_cnt"]]
   )
   params <- jsonlite::toJSON(params, auto_unbox =TRUE)
   exp_data <- list( title =  "exp-1",
@@ -44,7 +46,7 @@ test_that("test create_experiment", {
                     compute_now = 1,
                     parent_project = hid,
                     params = params
-  )
+                  )
   expect_error(create_experiment(exp_data), NA)
 
 })
