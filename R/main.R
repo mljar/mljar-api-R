@@ -47,13 +47,53 @@
   return(length(unique(y))>2, "reg", "bin_class")
 }
 
-# starts experiment
-.start_experiment <- function(x, y, valid=NULL){
-  task <- .obtain_task(y)
-
+# waits untill all models are trained
+.wait_till_all_models_trained() <- function(){
+  WAIT_INTERVAL    <- 10.0
+  loop_max_counter <- 24*360 # 24 hours of maximum waiting
+  results          <- NULL
+  #TODO
 }
 
-mljar_fit <- function(){
+# starts experiment
+.start_experiment <- function(x, y, valid, proj_title, exp_title, metric,
+                              algorithms, validation_kfolds, validation_shuffle,
+                              validation_stratify, validation_train_split,
+                              tuning_mode, create_ensemble, single_algorithm_time_limit){
+  task <- .obtain_task(y)
+  project_details <- create_project(proj_title, task)
+  tmp_data_filename <- .data_to_file(x, y)
+  ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
+  ds_details <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
+  # TODO Validation data ???
+  exp_details <- add_experiment_if_not_exists(project_details$hid, ds_details,
+                                              valid_dataset, exp_title, task,
+                                              validation_kfolds, validation_shuffle,
+                                              validation_stratify, validation_train_split,
+                                              algorithms, metric, tuning_mode,
+                                              single_algorithm_time_limit, create_ensemble)
+  .wait_till_all_models_trained()
+  #TODO
+}
+
+mljar_fit <- function(x, y, valid=NULL, proj_title=NULL, exp_title=NULL,
+                      algorithms = c(), metric = '',
+                      validation_kfolds = MLJAR_DEFAULT_FOLDS,
+                      validation_shuffle = MLJAR_DEFAULT_SHUFFLE,
+                      validation_stratify = MLJAR_DEFAULT_STRATIFY,
+                      validation_train_split = MLJAR_DEFAULT_TRAIN_SPLIT,
+                      tuning_mode = MLJAR_DEFAULT_TUNING_MODE,
+                      create_ensemble  = MLJAR_DEFAULT_ENSEMBLE,
+                      single_algorithm_time_limit = MLJAR_DEFAULT_TIME_CONSTRAINT){
+  if (is.null(proj_title)){
+    proj_title <- paste0("Project", round(runif(1, 1, 999)))
+  }
+  if (is.null(exp_title)){
+    proj_title <- paste0("Experiment", round(runif(1, 1, 999)))
+  }
+  if (length(algorithms) == 0){
+    stop("You must specify non-empty vector of algorithms to use.")
+  }
 
 }
 
