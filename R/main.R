@@ -5,7 +5,7 @@
   resstats$learning_cnt  <- 0
   resstats$done_cnt      <- 0
   resstats$error_cnt     <- 0
-  for (r in results$results){
+  for (r in curr_results$results){
     if (r$status == "Initiated"){
       resstats$initiated_cnt = resstats$initiated_cnt + 1
     } else if (r$status == "Learning"){
@@ -48,11 +48,24 @@
 }
 
 # waits untill all models are trained
-.wait_till_all_models_trained() <- function(){
+.wait_till_all_models_trained() <- function(project_hid, experiment_hid){
   WAIT_INTERVAL    <- 10.0
   loop_max_counter <- 24*360 # 24 hours of maximum waiting
   results          <- NULL
   #TODO
+  while(loop_max_counter > 0){
+    loop_max_counter <- loop_max_counter - 1
+    rtry <- try({
+      curr_results <- get_results(project_hid, experiment_hid)
+      exp <- get_experiment(experiment_hid)
+      if (exp$experiment$compute_now == 2){
+        break
+      }
+    }, silent=TRUE)
+    if(class(rtry)=="try-error"){
+      warning(paste("There were some problems with your model: ", geterrmessage()))
+    }
+
 }
 
 # starts experiment
@@ -66,7 +79,6 @@
   tmp_data_filename <- .data_to_file(x, y)
   ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
   ds_details <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
-  # TODO Validation data ???
   if (!is.null(validx) && !is.null(validy)){
     tmp_valid_data_filename <- .data_to_file(validx, validy)
     val_title <- paste0("Val_dataset", round(runif(1, 1, 999)))
