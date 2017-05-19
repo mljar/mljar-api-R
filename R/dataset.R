@@ -52,12 +52,11 @@ delete_dataset <-function(dataset_hid){
   }
 }
 
-add_new_dataset <- function(project_hid, filename, title){
-  # TODO in future create temporary csv file from data.frame
+add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE){
+  # Adds new dataset from filename
   dst_path <- upload_file(project_hid, filename)
 
-  # TODO check if prediction only
-  prediction_only <- 0
+  prediction_only <- as.integer(prediction_only)
 
   token <- .get_token()
   api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/datasets" , sep="")

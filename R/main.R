@@ -56,19 +56,26 @@
 }
 
 # starts experiment
-.start_experiment <- function(x, y, valid, proj_title, exp_title, metric,
+.start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
                               algorithms, validation_kfolds, validation_shuffle,
                               validation_stratify, validation_train_split,
                               tuning_mode, create_ensemble, single_algorithm_time_limit){
   task <- .obtain_task(y)
+  # create project and datasets
   project_details <- create_project(proj_title, task)
   tmp_data_filename <- .data_to_file(x, y)
   ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
   ds_details <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
   # TODO Validation data ???
+  if (!is.null(validx) && !is.null(validy)){
+    tmp_valid_data_filename <- .data_to_file(validx, validy)
+    val_title <- paste0("Val_dataset", round(runif(1, 1, 999)))
+    val_details <- add_dataset_if_not_exists(project_details$hid, tmp_valid_data_filename, val_title)
+  }
+  # add experiment
   exp_details <- add_experiment_if_not_exists(project_details$hid, ds_details,
-                                              valid_dataset, exp_title, task,
-                                              validation_kfolds, validation_shuffle,
+                                              val_details, wait_till_all_done, exp_title,
+                                              task, validation_kfolds, validation_shuffle,
                                               validation_stratify, validation_train_split,
                                               algorithms, metric, tuning_mode,
                                               single_algorithm_time_limit, create_ensemble)
@@ -76,8 +83,10 @@
   #TODO
 }
 
-mljar_fit <- function(x, y, valid=NULL, proj_title=NULL, exp_title=NULL,
+mljar_fit <- function(x, y, validx=NULL, validy=NULL,
+                      proj_title=NULL, exp_title=NULL,
                       algorithms = c(), metric = '',
+                      wait_till_all_done = TRUE,
                       validation_kfolds = MLJAR_DEFAULT_FOLDS,
                       validation_shuffle = MLJAR_DEFAULT_SHUFFLE,
                       validation_stratify = MLJAR_DEFAULT_STRATIFY,
