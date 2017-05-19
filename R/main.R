@@ -134,15 +134,17 @@
     tmp_valid_data_filename <- .data_to_file(validx, validy)
     val_title <- paste0("Val_dataset", round(runif(1, 1, 999)))
     val_details <- add_dataset_if_not_exists(project_details$hid, tmp_valid_data_filename, val_title)
+  } else {
+    val_details <- NULL
   }
   # add experiment
   exp_details <- add_experiment_if_not_exists(project_details$hid, ds_details,
-                                              val_details, wait_till_all_done, exp_title,
-                                              task, validation_kfolds, validation_shuffle,
+                                              val_details, exp_title, task,
+                                              validation_kfolds, validation_shuffle,
                                               validation_stratify, validation_train_split,
                                               algorithms, metric, tuning_mode,
                                               single_algorithm_time_limit, create_ensemble)
-  best_model <- .wait_till_all_models_trained()
+  best_model <- .wait_till_all_models_trained(project_details$hid, exp_details$hid)
   return(best_model)
 }
 
