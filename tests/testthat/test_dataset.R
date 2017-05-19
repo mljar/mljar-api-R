@@ -2,14 +2,8 @@ library(mljar)
 context("Test API dataset")
 
 task <- "bin_class"
-create_project('ds', task, 'some description')
-gp <- get_projects()
-for(i in 1:length(gp$projects)) {
-  if (gp$projects[[i]]$title=="ds"){
-    break
-  }
-}
-hid <- gp$projects[[i]]$hid
+pr <- create_project('ds', task, 'some description')
+hid <- pr$hid
 
 
 test_that("test add_new_dataset", {
