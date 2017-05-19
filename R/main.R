@@ -21,7 +21,10 @@
 
 #' checks if data is in good format
 .data_check <- function(x, y){
-  if(length(dim(y))>1 && dim(x)[2]>1){
+  if (is.null(x) || is.null(y)){
+    stop("NULL data")
+  }
+  if(length(dim(y))>1 && dim(y)[2]>1){
     stop("Sorry, multiple outputs are not supported in MLJAR")
   }
   if(dim(y)[1]!=dim(x)[1]){
@@ -36,7 +39,7 @@
   # now it's time to convert to data frame
   dataxy <- as.data.frame(x)
   dataxy["target"] <- y
-  tmpfilepath <- tempfile()
+  tmpfilepath <- paste0(tempfile(),".csv")
   file.create(tmpfilepath)
   write.csv(dataxy, file = tmpfilepath, row.names = F)
   return(tmpfilepath)
@@ -44,7 +47,7 @@
 
 # determines what kind of task is that basing on y
 .obtain_task <- function(y){
-  return(length(unique(y))>2, "reg", "bin_class")
+  return(ifelse(length(unique(y))>2, "reg", "bin_class"))
 }
 
 # gives info about remaining training time
@@ -145,7 +148,7 @@
 
 mljar_fit <- function(x, y, validx=NULL, validy=NULL,
                       proj_title=NULL, exp_title=NULL,
-                      algorithms = c(), metric = '',
+                      algorithms = c(), metric = "",
                       wait_till_all_done = TRUE,
                       validation_kfolds = MLJAR_DEFAULT_FOLDS,
                       validation_shuffle = MLJAR_DEFAULT_SHUFFLE,
@@ -163,11 +166,11 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   if (length(algorithms) == 0){
     stop("You must specify non-empty vector of algorithms to use.")
   }
-  model <- .start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
-                                         algorithms, validation_kfolds, validation_shuffle,
-                                         validation_stratify, validation_train_split,
-                                         tuning_mode, create_ensemble,
-                                         single_algorithm_time_limit)
+  model <- .start_experiment(x, y, validx, validy, proj_title, exp_title, metric,
+                             algorithms, validation_kfolds, validation_shuffle,
+                             validation_stratify, validation_train_split,
+                             tuning_mode, create_ensemble,
+                             single_algorithm_time_limit)
   return(model)
 }
 
