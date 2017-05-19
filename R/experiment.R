@@ -52,7 +52,7 @@ create_experiment <- function(data){
                body = data, encode = "form")
   .check_response_status(resp, 201)
   if (status_code(resp)==201){
-    sprintf("Experiment succesfully created!")
+    print(sprintf("Experiment succesfully created!"))
   }
   experiment_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   return(experiment_details)

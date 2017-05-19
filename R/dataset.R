@@ -77,7 +77,7 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
                body = data, encode = "form")
   .check_response_status(resp, 201)
   if (status_code(resp)==201){
-    sprintf("Dataset created!")
+    print(sprintf("Dataset created!"))
   }
   dataset_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   return(dataset_details)

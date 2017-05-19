@@ -5,7 +5,7 @@
   resstats$learning_cnt  <- 0
   resstats$done_cnt      <- 0
   resstats$error_cnt     <- 0
-  for (r in curr_results$results){
+  for (r in results$results){
     if (r$status == "Initiated"){
       resstats$initiated_cnt = resstats$initiated_cnt + 1
     } else if (r$status == "Learning"){
@@ -52,9 +52,11 @@
 
 # gives info about remaining training time
 .asses_total_training_time <- function(exp, res_stats){
-  single_alg_limit <- ex$experiment$params$single_limit
+  single_alg_limit <- exp$experiment$params$single_limit
   if (is.null(single_alg_limit)){
     single_alg_limit <- 5
+  } else {
+    single_alg_limit <- as.numeric(single_alg_limit)
   }
   total <- (res_stats$initiated_cnt * single_alg_limit) / max(c(res_stats$learning_cnt,1))
   total <- total + 0.5 * single_alg_limit
@@ -105,9 +107,9 @@
       } else {
         eta = round(eta, 2)
       }
-      sprintf("initiated: %s, learning: %s, done: %s, error: %s | ETA: %s minutes",
+      print(sprintf("initiated: %s, learning: %s, done: %s, error: %s | ETA: %s minutes",
               res_stats$initiated_cnt, res_stats$learning_cnt, res_stats$done_cnt,
-              res_stats$error_cnt, eta)
+              res_stats$error_cnt, eta))
       sleep(WAIT_INTERVAL)
 
     }, silent=TRUE)
@@ -115,7 +117,7 @@
       warning(paste("There were some problems with your model: ", geterrmessage()))
     }
   }
-  best_result <- .get_best_result()
+  best_result <- .get_best_result(exp, curr_results)
   return(best_result)
 }
 
@@ -129,17 +131,17 @@
   project_details <- create_project(proj_title, task)
   tmp_data_filename <- .data_to_file(x, y)
   ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
-  ds_details <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
+  dataset <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
   if (!is.null(validx) && !is.null(validy)){
     tmp_valid_data_filename <- .data_to_file(validx, validy)
     val_title <- paste0("Val_dataset", round(runif(1, 1, 999)))
-    val_details <- add_dataset_if_not_exists(project_details$hid, tmp_valid_data_filename, val_title)
+    valdataset <- add_dataset_if_not_exists(project_details$hid, tmp_valid_data_filename, val_title)
   } else {
-    val_details <- NULL
+    valdataset <- NULL
   }
   # add experiment
-  exp_details <- add_experiment_if_not_exists(project_details$hid, ds_details,
-                                              val_details, exp_title, task,
+  exp_details <- add_experiment_if_not_exists(project_details$hid, dataset$dataset,
+                                              valdataset$dataset, exp_title, task,
                                               validation_kfolds, validation_shuffle,
                                               validation_stratify, validation_train_split,
                                               algorithms, metric, tuning_mode,

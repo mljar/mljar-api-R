@@ -69,7 +69,7 @@ create_project <-function(title, task, description=''){
                body = data, encode = "form")
   .check_response_status(resp, 201)
   if (status_code(resp)==201){
-    sprintf("Project '%s' succesfully created!", title)
+    print(sprintf("Project '%s' succesfully created!", title))
   }
   project_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
   return(project_details)
