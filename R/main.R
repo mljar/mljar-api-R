@@ -47,12 +47,44 @@
   return(length(unique(y))>2, "reg", "bin_class")
 }
 
-# waits untill all models are trained
-.wait_till_all_models_trained() <- function(project_hid, experiment_hid){
+# gives info about remaining training time
+.asses_total_training_time <- function(exp, res_stats){
+  single_alg_limit <- ex$experiment$params$single_limit
+  if (is.null(single_alg_limit)){
+    single_alg_limit <- 5
+  }
+  total <- (res_stats$initiated_cnt * single_alg_limit) / max(c(res_stats$learning_cnt,1))
+  total <- total + 0.5 * single_alg_limit
+  return(total)
+}
+
+# returns best result from given experiment and res_stats
+.get_best_result <- function(exp, curr_results){
+  the_best_result <- NULL
+  min_value       <- 10e12
+  if (exp$experiment$compute_now == 1 || exp$experiment$compute_now == 2) {
+    if (!(exp$experiment$metric %in% MLJAR_OPT_MAXIMIZE)){
+      opt_direction <- 1
+    } else {
+      opt_direction <- -1
+    }
+    for(res in curr_results$results){
+      if(is.null(res$metric_value)) next
+      if(res$metric_value * opt_direction < min_value){
+        min_value <- res$metric_value*opt_direction
+        the_best_result <- res
+      }
+    }
+  }
+  return(the_best_result)
+}
+
+# waits untill all models are trained and returns best model
+.wait_till_all_models_trained <- function(project_hid, experiment_hid){
   WAIT_INTERVAL    <- 10.0
   loop_max_counter <- 24*360 # 24 hours of maximum waiting
   results          <- NULL
-  #TODO
+  #TODO: test that loop
   while(loop_max_counter > 0){
     loop_max_counter <- loop_max_counter - 1
     rtry <- try({
@@ -61,14 +93,30 @@
       if (exp$experiment$compute_now == 2){
         break
       }
+      res_stats <- .get_results_stats(curr_results)
+      # printing out info about training process
+      eta <- .asses_total_training_time(exp, res_stats)
+      if (res_stats$initiated_cnt + res_stats$learning_cnt +
+          res_stats$done_cnt + res_stats$error_cnt == 0) {
+        eta <- 'estimating'
+      } else {
+        eta = round(eta, 2)
+      }
+      sprintf("initiated: %s, learning: %s, done: %s, error: %s | ETA: %s minutes",
+              res_stats$initiated_cnt, res_stats$learning_cnt, res_stats$done_cnt,
+              res_stats$error_cnt, eta)
+      sleep(WAIT_INTERVAL)
+
     }, silent=TRUE)
     if(class(rtry)=="try-error"){
       warning(paste("There were some problems with your model: ", geterrmessage()))
     }
-
+  }
+  best_result <- .get_best_result()
+  return(best_result)
 }
 
-# starts experiment
+# starts experiment and returns bets model
 .start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
                               algorithms, validation_kfolds, validation_shuffle,
                               validation_stratify, validation_train_split,
@@ -91,8 +139,8 @@
                                               validation_stratify, validation_train_split,
                                               algorithms, metric, tuning_mode,
                                               single_algorithm_time_limit, create_ensemble)
-  .wait_till_all_models_trained()
-  #TODO
+  best_model <- .wait_till_all_models_trained()
+  return(best_model)
 }
 
 mljar_fit <- function(x, y, validx=NULL, validy=NULL,
@@ -115,9 +163,14 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   if (length(algorithms) == 0){
     stop("You must specify non-empty vector of algorithms to use.")
   }
-
+  model <- .start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
+                                         algorithms, validation_kfolds, validation_shuffle,
+                                         validation_stratify, validation_train_split,
+                                         tuning_mode, create_ensemble,
+                                         single_algorithm_time_limit)
+  return(model)
 }
 
-mljar_predict <- function(){
+mljar_predict <- function(model){
 
 }
