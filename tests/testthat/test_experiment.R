@@ -6,7 +6,7 @@ pr <- create_project('ds', task, 'some description')
 hid <- pr$hid
 
 pr_task <- pr$task
-file_from_resources <- "resources/binary_part_iris_converted.csv"
+file_from_resources <- system.file("resources/binary_part_iris_converted.csv", package = "mljar")
 dataset1 <- add_dataset_if_not_exists(hid, file_from_resources, "test-exp1")
 
 validation_kfolds <- 5

@@ -43,8 +43,10 @@
     dataxy <- as.data.frame(x)
     dataxy["target"] <- y
   } else {
+    if (is.null(x)) stop("NULL data")
     dataxy <- as.data.frame(x)
   }
+  # temporary csv file is created
   tmpfilepath <- paste0(tempfile(),".csv")
   file.create(tmpfilepath)
   write.csv(dataxy, file = tmpfilepath, row.names = F)

@@ -1,7 +1,7 @@
 library(mljar)
 context("Test main")
 
-irisdata <- read.csv("resources/binary_part_iris_converted.csv")
+irisdata <- read.csv(system.file("resources/binary_part_iris_converted.csv", package = "mljar"))
 dx <- irisdata[-5]
 dy <- irisdata[5]
 
@@ -46,11 +46,10 @@ test_that("test mljar_fit integration test",{
   expect_equal(bs$status, "Done")
 })
 
-mljar_fit(dx, dy, validx=NULL, validy=NULL,
-          proj_title="fullproject1", exp_title="fullexp1",
-          algorithms = c("logreg"), metric = "logloss")
+test_that("test mljar_predict integration test",{
+  expect_error(predvals <- mljar_predict(bs, x.vl, "fullproject2"), NA)
+  expect_equal(as.numeric(predvals>0.5), y.vl)
+})
 
-
-mljar_fit(x.tr, y.tr, validx=x.vl, validy=y.vl,
-          proj_title="fullproject2", exp_title="fullexp1",
-          algorithms = c("logreg"), metric = "logloss")
+projects <- get_projects()
+delete_project(projects$projects[[1]]$hid)
