@@ -35,12 +35,16 @@
 }
 
 #' converts data to temporary file
-.data_to_file <- function(x, y){
-  # first we check if data is valid
-  .data_check(x, y)
-  # now it's time to convert to data frame
-  dataxy <- as.data.frame(x)
-  dataxy["target"] <- y
+.data_to_file <- function(x, y=NULL){
+  if (!is.null(y)){
+    # first we check if data is valid
+    .data_check(x, y)
+    # now it's time to convert to data frame
+    dataxy <- as.data.frame(x)
+    dataxy["target"] <- y
+  } else {
+    dataxy <- as.data.frame(x)
+  }
   tmpfilepath <- paste0(tempfile(),".csv")
   file.create(tmpfilepath)
   write.csv(dataxy, file = tmpfilepath, row.names = F)
@@ -180,6 +184,44 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   return(model)
 }
 
-mljar_predict <- function(model){
-
+# predict
+mljar_predict <- function(model, x_pred, project_title){
+  if (is.null(model)) {
+    stop("Model cannot be null.")
+  }
+  # checking if prediction data is ok
+  x_pred <- as.data.frame(x_pred)
+  if (is.null(x_pred)) {
+    stop("NULL data")
+  }
+  # look for project
+  projects <- get_projects()
+  proj_hid <- NULL
+  for(i in 1:length(projects$projects)) {
+    if (projects$projects[[i]]$title == project_title){
+      proj_hid <- projects$projects[[i]]$hid
+      break
+    }
+  }
+  if (is.null(proj_hid)) stop("Project not found! Check title and try again.")
+  # adding prediction dataset
+  tmp_data_filename <- .data_to_file(x_pred)
+  dspred_title <- paste0("Pred_dataset", round(runif(1, 1, 999)))
+  pred_ds  <- add_dataset_if_not_exists(proj_hid, tmp_data_filename, dspred_title, TRUE)
+  total_checks <- 1000
+  for (i in 1:total_checks){
+    prediction <- get_prediction(proj_hid, pred_ds$dataset$hid, model$hid)
+    print(sprintf("Downloading prediction - %s", i))
+    # for first iteration we send dataset for prediction
+    if (i == 1 && length(prediction$prediction) == 0) {
+      submit_predict_job(proj_hid, pred_ds$dataset$hid, model$hid)
+    }
+    if (length(prediction$prediction) > 0) {
+      pred <- prediction_download(prediction$prediction[[1]]$hid)
+      delete_dataset(pred_ds$dataset$hid)
+      return(pred)
+    }
+    Sys.sleep(10)
+  }
+  return(NULL)
 }

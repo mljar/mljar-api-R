@@ -48,7 +48,7 @@ delete_dataset <-function(dataset_hid){
   api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
   resp <- DELETE(api_url_dataset_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
-    sprintf("Dataset <%s> succesfully deleted!", hid)
+    sprintf("Dataset <%s> succesfully deleted!", dataset_hid)
   }
 }
 
@@ -134,7 +134,7 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
   return(ifelse(status_code(resp)==200, TRUE, FALSE))
 }
 
-add_dataset_if_not_exists <- function(project_hid, filename, title){
+add_dataset_if_not_exists <- function(project_hid, filename, title, prediction_only=FALSE){
   .wait_till_all_datasets_are_valid(project_hid)
   ds <- get_datasets(project_hid)
   if (length(ds$datasets)>0){
@@ -144,7 +144,7 @@ add_dataset_if_not_exists <- function(project_hid, filename, title){
       }
     }
   }
-  dataset_details <- add_new_dataset(project_hid, filename, title)
+  dataset_details <- add_new_dataset(project_hid, filename, title, prediction_only)
   .wait_till_all_datasets_are_valid(project_hid)
   if (!.accept_dataset_column_usage(dataset_details$hid)){
     stop("There was a problem with accept column usage for your dataset.")
