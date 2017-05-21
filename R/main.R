@@ -21,6 +21,8 @@
 
 #' checks if data is in good format
 .data_check <- function(x, y){
+  x <- as.data.frame(x)
+  y <- as.data.frame(y)
   if (is.null(x) || is.null(y)){
     stop("NULL data")
   }

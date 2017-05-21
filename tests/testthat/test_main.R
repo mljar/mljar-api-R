@@ -32,7 +32,25 @@ test_that("test mljar_fit reactions to bad arguments",{
   )
 })
 
+test_that("test mljar_fit integration test",{
+  irisdata2 <- irisdata[sample(nrow(irisdata)),]
+  x.tr <- irisdata2[1:80,-5]
+  y.tr <- irisdata2[1:80,5]
+  x.vl <- irisdata2[81:100,-5]
+  y.vl <- irisdata2[81:100,5]
+  expname <- "fullexp1"
+  bs <- mljar_fit(x.tr, y.tr, validx=x.vl, validy=y.vl,
+                  proj_title="fullproject2", exp_title=expname,
+                  algorithms = c("logreg"), metric = "logloss")
+  expect_equal(bs$experiment, expname)
+  expect_equal(bs$status, "Done")
+})
 
 mljar_fit(dx, dy, validx=NULL, validy=NULL,
           proj_title="fullproject1", exp_title="fullexp1",
-          algorithms = c("xgb"), metric = "logloss")
+          algorithms = c("logreg"), metric = "logloss")
+
+
+mljar_fit(x.tr, y.tr, validx=x.vl, validy=y.vl,
+          proj_title="fullproject2", exp_title="fullexp1",
+          algorithms = c("logreg"), metric = "logloss")
