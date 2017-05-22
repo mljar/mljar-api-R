@@ -1,5 +1,14 @@
+#' #' Get results of MLJAR training
+#'
+#' @param project_hid character with project identifier
+#' @param experiment_hid character with experiment identifier
+#'
+#' @return structure with parsed results and http response
+#'
+#' @importFrom httr POST
+#'
+#' @export
 get_results <- function(project_hid, experiment_hid){
-  #' Get results - list all models.
   token <- .get_token()
   api_url_results <- paste("https://mljar.com/api/", API_VERSION, "/results/" , sep="")
   datares <- list( project_id =  project_hid,

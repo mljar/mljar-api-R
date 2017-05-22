@@ -19,45 +19,6 @@
   return(resstats)
 }
 
-#' checks if data is in good format
-.data_check <- function(x, y){
-  x <- as.data.frame(x)
-  y <- as.data.frame(y)
-  if (is.null(x) || is.null(y)){
-    stop("NULL data")
-  }
-  if(length(dim(y))>1 && dim(y)[2]>1){
-    stop("Sorry, multiple outputs are not supported in MLJAR")
-  }
-  if(dim(y)[1]!=dim(x)[1]){
-    stop("Sorry, there is a missmatch between X and y matrices shapes")
-  }
-}
-
-#' converts data to temporary file
-.data_to_file <- function(x, y=NULL){
-  if (!is.null(y)){
-    # first we check if data is valid
-    .data_check(x, y)
-    # now it's time to convert to data frame
-    dataxy <- as.data.frame(x)
-    dataxy["target"] <- y
-  } else {
-    if (is.null(x)) stop("NULL data")
-    dataxy <- as.data.frame(x)
-  }
-  # temporary csv file is created
-  tmpfilepath <- paste0(tempfile(),".csv")
-  file.create(tmpfilepath)
-  write.csv(dataxy, file = tmpfilepath, row.names = F)
-  return(tmpfilepath)
-}
-
-# determines what kind of task is that basing on y
-.obtain_task <- function(y){
-  return(ifelse(length(unique(y))>2, "reg", "bin_class"))
-}
-
 # gives info about remaining training time
 .asses_total_training_time <- function(exp, res_stats){
   single_alg_limit <- exp$experiment$params$single_limit
@@ -136,8 +97,8 @@
                               tuning_mode, create_ensemble, single_algorithm_time_limit){
   task <- .obtain_task(y)
   # create project and datasets
-  project_details <- create_project(proj_title, task)
   tmp_data_filename <- .data_to_file(x, y)
+  project_details <- create_project(proj_title, task)
   ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
   dataset <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
   if (!is.null(validx) && !is.null(validy)){

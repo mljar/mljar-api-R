@@ -1,4 +1,12 @@
-# FUnction to get predictions from MLJAR.
+#' Function to get predictions from MLJAR.
+#'
+#' @param prediction_hid prediction identifier
+#'
+#' @return data.frame with prediction
+#'
+#' @importFrom httr POST
+#'
+#' @export
 prediction_download <- function(prediction_hid){
   token <- .get_token()
   api_url_preddown <- paste("https://mljar.com/api/", API_VERSION, "/download/prediction/" , sep="")
