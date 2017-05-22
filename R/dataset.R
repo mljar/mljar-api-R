@@ -1,10 +1,15 @@
+#' Gets list of available datasets
+#'
+#' @param project_hid character with project identifier
+#'
+#' @return structure with parsed datasets and response
+#' @export
 get_datasets <- function(project_hid) {
   #' Gets list of available datasets
   api_url_datasets <- paste("https://mljar.com/api/", API_VERSION, "/datasets?project_id=", project_hid, sep="")
   rp <- .get_json_from_get_query(api_url_datasets)
   resp <- rp$resp
   parsed <- rp$parsed
-
   structure(
     list(
       datasets = parsed,
@@ -20,13 +25,17 @@ print.get_datasets <- function(x, ...) {
   invisible(x)
 }
 
+#' Gets dataset
+#'
+#' @param dataset_hid character with dataset identifier
+#'
+#' @return structure with parsed dataset and response
+#' @export
 get_dataset <- function(dataset_hid) {
-  #' Get data from a dataset of specified hid
   api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
   rp <- .get_json_from_get_query(api_url_dataset_hid)
   resp <- rp$resp
   parsed <- rp$parsed
-
   structure(
     list(
       dataset = parsed,
@@ -42,8 +51,11 @@ print.get_dataset <- function(x, ...) {
   invisible(x)
 }
 
+#' Deletes dataset
+#'
+#' @param dataset_hid character with dataset identifier
+#' @export
 delete_dataset <-function(dataset_hid){
-  #' deletes project
   token <- .get_token()
   api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
   resp <- DELETE(api_url_dataset_hid, add_headers(Authorization = paste("Token", token)))
@@ -52,8 +64,19 @@ delete_dataset <-function(dataset_hid){
   }
 }
 
+#' Adds new dataset
+#'
+#' @param project_hid character with project identifier
+#' @param filename character with filename containing data
+#' @param title title of dataset
+#' @param prediction_only boolean determining if data is used only for prediction
+#'
+#' @return parsed by toJSON dataset details
+#' @export
+#'
+#' @importFrom httr POST
+#' @importFrom jsonlite toJSON
 add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE){
-  # Adds new dataset from filename
   dst_path <- upload_file(project_hid, filename)
 
   prediction_only <- as.integer(prediction_only)
@@ -69,8 +92,8 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
     valid = 0,
     parent_project = project_hid,
     meta = '',
-    data_type = 'tabular',
-    scope = 'private',
+    data_type = "tabular",
+    scope = "private",
     prediction_only = prediction_only
   )
   resp <- POST(api_url_new_dataset, add_headers(Authorization = paste("Token", token)),
@@ -134,6 +157,18 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
   return(ifelse(status_code(resp)==200, TRUE, FALSE))
 }
 
+#' Add dataset if not exists
+#'
+#' Checks parameters before adding new dataset and verifies
+#' if it doesn't exists already.
+#'
+#' @param project_hid character with project identifier
+#' @param filename character with filename containing data
+#' @param title title of dataset
+#' @param prediction_only boolean determining if data is used only for prediction
+#'
+#' @return parsed dataset details
+#' @export
 add_dataset_if_not_exists <- function(project_hid, filename, title, prediction_only=FALSE){
   .wait_till_all_datasets_are_valid(project_hid)
   ds <- get_datasets(project_hid)

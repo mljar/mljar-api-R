@@ -1,10 +1,14 @@
+#' Get projects
+#'
+#' Gets list of available projects
+#'
+#' @return structure with parsed projects and http response
+#' @export
 get_projects <- function() {
-  #' Gets list of available projects
   api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
   rp <- .get_json_from_get_query(api_url_projects)
   resp <- rp$resp
   parsed <- rp$parsed
-
   structure(
     list(
       projects = parsed,
@@ -20,8 +24,15 @@ print.get_projects <- function(x, ...) {
   invisible(x)
 }
 
+#' Get project
+#'
+#' Get data from a project of specified hid
+#'
+#' @param hid character with project unique identifier
+#'
+#' @return structure with parsed project and http response
+#' @export
 get_project <- function(hid) {
-  #' Get data from a project of specified hid
   api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
   rp <- .get_json_from_get_query(api_url_project_hid)
   resp <- rp$resp
@@ -42,20 +53,15 @@ print.get_project <- function(x, ...) {
   invisible(x)
 }
 
-# checks if there is no project with the same name and task
-.verify_if_project_exists <- function(projtitle, task){
-  gp <- get_projects()
-  for (proj in gp$projects){
-    if (proj$title==projtitle && proj$task==task){
-      stop("Project with the same title and task already exists, change name.")
-    }
-  }
-  return(TRUE)
-}
-
-
-create_project <-function(title, task, description=''){
-  #' creates a new project
+#' Creates a new project
+#'
+#' @param title character with project title
+#' @param task character with project task
+#' @param description optional description
+#'
+#' @return project details structure
+#' @export
+create_project <-function(title, task, description=""){
   .verify_if_project_exists(title, task)
   token <- .get_token()
   api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
@@ -75,48 +81,37 @@ create_project <-function(title, task, description=''){
   return(project_details)
 }
 
+#' Delete project
+#'
+#' @param hid charceter with project identifier
+#'
+#' @export
+#' @importFrom httr DELETE status_code
 delete_project <-function(hid){
-  #' deletes project
   token <- .get_token()
   api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
   resp <- DELETE(api_url_project_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
-    sprintf("Project <%s> succesfully deleted!", hid)
+    print(sprintf("Project <%s> succesfully deleted!", hid))
   }
 }
 
-####################### Helper functions
+# Helper project functions
 
-.get_json_from_get_query <- function(query){
-  # returns api response and parsed output
-  token <- .get_token()
-  resp <- GET(query, add_headers(Authorization = paste("Token", token)))
-  parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
-
-  .check_response_status(resp, 200)
-
-  return(list(resp=resp, parsed=parsed))
-}
-
-.get_token <- function(){
-  # returns token defined in enviromental variables
-  token <- Sys.getenv("MLJAR_TOKEN")
-  if (identical(token, "")) {
-    stop("Specify MLJAR_TOKEN env variable", call. = FALSE)
+#' Verify_if_project_exists
+#'
+#' Checks if there is no project with the same name and task.
+#'
+#' @param projtitle character with project title
+#' @param task characeter with project task
+#'
+#' @return TRUE if okay, stops if such a project exists.
+.verify_if_project_exists <- function(projtitle, task){
+  gp <- get_projects()
+  for (proj in gp$projects){
+    if (proj$title==projtitle && proj$task==task){
+      stop("Project with the same title and task already exists, change name.")
+    }
   }
-  return(token)
-}
-
-.check_response_status <- function(resp, expected_code,
-                                   error_message="MLJAR API request failed"){
-  # compares response status with expeced_code and returns error_message if not equal
-  if (status_code(resp) != expected_code) {
-    stop(
-      sprintf(
-        paste(error_message, "[%s]\n"),
-        status_code(resp)
-      ),
-      call. = FALSE
-    )
-  }
+  return(TRUE)
 }

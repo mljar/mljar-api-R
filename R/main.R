@@ -1,4 +1,8 @@
 #' Get results statistics
+#'
+#' @param results results structure
+#'
+#' @return list with numbers of jobs: initiated, learning, done, error
 .get_results_stats <- function(results){
   resstats <- list()
   resstats$initiated_cnt <- 0
@@ -19,7 +23,12 @@
   return(resstats)
 }
 
-# gives info about remaining training time
+#' Gives info about remaining training time
+#'
+#' @param exp experiment structure
+#' @param res_stats results statistics structure
+#'
+#' @return numeric with estimated time
 .asses_total_training_time <- function(exp, res_stats){
   single_alg_limit <- exp$experiment$params$single_limit
   if (is.null(single_alg_limit)){
@@ -32,7 +41,14 @@
   return(total)
 }
 
-# returns best result from given experiment and res_stats
+#' Get best result
+#'
+#' Returns best result from given experiment and results stats.
+#'
+#' @param exp experiment structure
+#' @param curr_results currect results structure
+#'
+#' @return results structure with best results
 .get_best_result <- function(exp, curr_results){
   the_best_result <- NULL
   min_value       <- 10e12
@@ -53,7 +69,14 @@
   return(the_best_result)
 }
 
-# waits untill all models are trained and returns best model
+#' Wait till all models trained
+#'
+#' Waits untill all models are trained and returns best model.
+#'
+#' @param project_hid character with project identifier
+#' @param experiment_hid character with experiment identifier
+#'
+#' @return best model structure
 .wait_till_all_models_trained <- function(project_hid, experiment_hid){
   WAIT_INTERVAL    <- 10.0
   loop_max_counter <- 24*360 # 24 hours of maximum waiting
@@ -90,7 +113,28 @@
   return(best_result)
 }
 
-# starts experiment and returns bets model
+#' Starts experiment and returns best model
+#'
+#' But before verifies if given input data is correct.
+#'
+#' @param x data.frame/matrix with training data
+#' @param y data.frame/matrix with training labels
+#' @param validx data.frame/matrix with validation data
+#' @param validy data.frame/matrix with validation labels
+#' @param proj_title charcater with project title
+#' @param exp_title charcater with experiment title
+#' @param metric charcater with metric
+#' @param algorithms list of algorithms to use
+#' @param validation_kfolds number of folds to be used in validation
+#' @param validation_shuffle boolean which specify if shuffle samples before training
+#' @param validation_stratify boolean which decides whether samples will be
+#' divided into folds with the same class distribution
+#' @param validation_train_split ratio how to split training dataset into train and validation
+#' @param tuning_mode tuning mode
+#' @param create_ensemble whether or not to create ensemble
+#' @param single_algorithm_time_limit numeric with time limit to calculate algorithm
+#'
+#' @return structure with the best model
 .start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
                               algorithms, validation_kfolds, validation_shuffle,
                               validation_stratify, validation_train_split,
@@ -119,6 +163,53 @@
   return(best_model)
 }
 
+#' MLJAR FIT
+#'
+#' Verifies parameters and data and tries to run experiment.
+#'
+#' @param x data.frame/matrix with training data
+#' @param y data.frame/matrix with training labels
+#' @param validx data.frame/matrix with validation data
+#' @param validy data.frame/matrix with validation labels
+#' @param proj_title charcater with project title
+#' @param exp_title charcater with experiment title
+#' @param metric charcater with metric
+#' For binary classification there are metrics:
+#' - auc which is for Area Under ROC Curve
+#' - logloss which is for Logarithmic Loss
+#' For regression tasks:
+#' - rmse which is Root Mean Square Error
+#' - mse which is for Mean Square Error
+#' - mase which is for Mean Absolute Error
+#' @param wait_till_all_done boolean saying whether function should wait
+#' till all models are done
+#' @param algorithms list of algorithms to use
+#' For binary classification task available algorithm are:
+#' - xgb which is for Xgboost
+#' - lgb which is for LightGBM
+#' - mlp which is for Neural Network
+#' - rfc which is for Random Forest
+#' - etc which is for Extra Trees
+#' - rgfc which is for Regularized Greedy Forest
+#' - knnc which is for k-Nearest Neighbors
+#' - logreg which is for Logistic Regression
+#' For regression task there are available algorithms:
+#'   - xgbr which is for Xgboost
+#' - lgbr which is for LightGBM
+#' - rgfr which is for Regularized Greedy Forest
+#' - rfr which is for Random Forest
+#' - etr which is for Extra Trees
+#' @param validation_kfolds number of folds to be used in validation
+#' @param validation_shuffle boolean which specify if shuffle samples before training
+#' @param validation_stratify boolean which decides whether samples will be
+#' divided into folds with the same class distribution
+#' @param validation_train_split ratio how to split training dataset into train and validation
+#' @param tuning_mode tuning mode
+#' @param create_ensemble whether or not to create ensemble
+#' @param single_algorithm_time_limit numeric with time limit to calculate algorithm
+#'
+#' @return structure with the best model
+#' @export
 mljar_fit <- function(x, y, validx=NULL, validy=NULL,
                       proj_title=NULL, exp_title=NULL,
                       algorithms = c(), metric = "",
@@ -147,7 +238,16 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   return(model)
 }
 
-# predict
+#' MLJAR PREDICT
+#'
+#' Makes prediction basing on trained model.
+#'
+#' @param model model or MLJAR result structure
+#' @param x_pred data.frame/matrix data to predict
+#' @param project_title character with project title
+#'
+#' @return data.frame with preditction
+#' @export
 mljar_predict <- function(model, x_pred, project_title){
   if (is.null(model)) {
     stop("Model cannot be null.")

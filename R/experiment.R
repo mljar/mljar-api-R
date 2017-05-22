@@ -1,5 +1,10 @@
+#' Gets list of available experiments for given project
+#'
+#' @param project_hid character with project identifier
+#'
+#' @return  structure with parsed experiments and http response
+#' @export
 get_experiments <- function(project_hid){
-  #' Gets list of available experiments for given project
   api_url_experiments <- paste("https://mljar.com/api/", API_VERSION, "/experiments",
                                "?project_id=", project_hid, sep="")
   rp <- .get_json_from_get_query(api_url_experiments)
@@ -21,8 +26,13 @@ print.get_experiments <- function(x, ...) {
   invisible(x)
 }
 
+#' Gets experiment details
+#'
+#' @param experiment_hid character with experiment identifier
+#'
+#' @return structure with parsed experiment and http response
+#' @export
 get_experiment <- function(experiment_hid){
-  #' Gets experiment details
   api_url_experiment <- paste("https://mljar.com/api/", API_VERSION, "/experiments/",
                                experiment_hid, sep="")
   rp <- .get_json_from_get_query(api_url_experiment)
@@ -44,8 +54,16 @@ print.get_experiment <- function(x, ...) {
   invisible(x)
 }
 
+#' Creates experiment from given parameters
+#'
+#' @param data list of experiment parameters
+#'
+#' @return experiment details parsed by fromJSON
+#' @export
+#'
+#' @importFrom httr POST
+#' @importFrom jsonlite fromJSON
 create_experiment <- function(data){
-  #' creates experiment from given parameters
   token <- .get_token()
   api_url_create_experiment <- paste("https://mljar.com/api/", API_VERSION, "/experiments" , sep="")
   resp <- POST(api_url_create_experiment, add_headers(Authorization = paste("Token", token)),
@@ -58,12 +76,37 @@ create_experiment <- function(data){
   return(experiment_details)
 }
 
+#' Add experiment if not exists
+#'
+#' Check if experiment exists, verifies parameters, creates data
+#' to create_experiment function and finally starts creation of
+#' MLJAR experiment.
+#'
+#' @param project_hid character with project identifier
+#' @param train_dataset character with path to training dataset
+#' @param valid_dataset character with path to validation dataset
+#' @param experiment_title character with experiment title
+#' @param project_task character with project task
+#' @param validation_kfolds number of folds to be used in validation
+#' @param validation_shuffle boolean which specify if shuffle samples before training
+#' @param validation_stratify boolean which decides whether samples will be
+#' divided into folds with the same class distribution
+#' @param validation_train_split ratio how to split training dataset into train and validation
+#' @param algorithms list of algorithms to use
+#' @param metric charcater with metric
+#' @param tuning_mode tuning mode
+#' @param time_constraint numeric with time limit to calculate algorithm
+#' @param create_ensemble whether or not to create ensemble
+#'
+#' @return experiment details structure
+#'
+#' @export
 add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_dataset, experiment_title,
                                          project_task, validation_kfolds, validation_shuffle,
                                          validation_stratify, validation_train_split, algorithms, metric,
                                          tuning_mode, time_constraint, create_ensemble){
-  # check validation parameters
   if (!is.null(valid_dataset)){
+    # check validation parameters
     validation = "With dataset"
   } else {
     if (!is.null(validation_train_split)){
