@@ -12,7 +12,7 @@ for(i in 1:length(gp$projects)) {
 hid <- gp$projects[[i]]$hid
 
 pr_task <- gp$projects[[i]]$task
-file_from_resources <- "resources/binary_part_iris_converted.csv"
+file_from_resources <- system.file("resources/binary_part_iris_converted.csv", package = "mljar")
 dataset1 <- add_dataset_if_not_exists(hid, file_from_resources, "test-exp1")
 
 validation_kfolds <- 5
@@ -32,8 +32,8 @@ exp <- add_experiment_if_not_exists(hid, dataset1$dataset, NULL, "exp",
                                     validation_stratify, validation_train_split, algorithms, metric,
                                     tuning_mode, time_constraint, create_ensemble)
 test_that("test get_results", {
-  sleep(3) # wait till experiment is initiated
-  r<-get_results(hid,exp$hid)
+  Sys.sleep(3) # wait till experiment is initiated
+  r <- get_results(hid, exp$hid)
   expect_equal(length(r$results), 5)
 })
 

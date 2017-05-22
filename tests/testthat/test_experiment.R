@@ -36,7 +36,7 @@ test_that("test create_experiment", {
                     description = "",
                     metric = metric,
                     validation_scheme = validation,
-                    task = project_task,
+                    task = pr_task,
                     compute_now = 1,
                     parent_project = hid,
                     params = params
