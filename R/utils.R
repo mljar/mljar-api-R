@@ -11,14 +11,11 @@
 #' @importFrom jsonlite fromJSON
 #' @return list with response and parsed response from json
 .get_json_from_post_query <- function(query, data){
-  #
   token <- .get_token()
   resp <- POST(query, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
   parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
-
   .check_response_status(resp, 200)
-
   return(list(resp=resp, parsed=parsed))
 }
 

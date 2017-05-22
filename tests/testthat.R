@@ -9,4 +9,4 @@ if (length(gp$projects)>0) {
   }
 }
 test_check("mljar")
-Sys.unsetenv(MLJAR_TOKEN)
+Sys.unsetenv("MLJAR_TOKEN")

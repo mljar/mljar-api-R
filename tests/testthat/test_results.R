@@ -12,7 +12,7 @@ for(i in 1:length(gp$projects)) {
 hid <- gp$projects[[i]]$hid
 
 pr_task <- gp$projects[[i]]$task
-file_from_resources <- system.file("resources/binary_part_iris_converted.csv", package = "mljar")
+file_from_resources <- "binary_part_iris_converted.csv"
 dataset1 <- add_dataset_if_not_exists(hid, file_from_resources, "test-exp1")
 
 validation_kfolds <- 5

@@ -1,7 +1,8 @@
 library(mljar)
 context("Test main")
 
-irisdata <- read.csv(system.file("resources/binary_part_iris_converted.csv", package = "mljar"))
+file_from_resources <- "binary_part_iris_converted.csv"
+irisdata <- read.csv(file_from_resources)
 dx <- irisdata[-5]
 dy <- irisdata[5]
 
