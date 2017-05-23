@@ -6,7 +6,7 @@
 #' @export
 get_datasets <- function(project_hid) {
   #' Gets list of available datasets
-  api_url_datasets <- paste("https://mljar.com/api/", API_VERSION, "/datasets?project_id=", project_hid, sep="")
+  api_url_datasets <- paste("https://mljar.com/api/", API_VERSION, "/datasets?project_id=", project_hid, sep = "")
   rp <- .get_json_from_get_query(api_url_datasets)
   resp <- rp$resp
   parsed <- rp$parsed
