@@ -1,9 +1,10 @@
+[![Build Status](https://travis-ci.org/mljar/mljar-api-R.svg?branch=master)](https://travis-ci.org/mljar/mljar-api-R)
+
 # mljar-api-R
+
 A simple R wrapper for **mljar.com** API. It allows MLJAR users to create Machine Learning models with few lines of code:
 
 ```R
-library(mljar)
-
 model <- mljar_fit(x.training, y.training, validx=x.validation, validy=y.validation,
                 proj_title="Project title", exp_title="experiment title",
                 algorithms = c("logreg"), metric = "logloss")
