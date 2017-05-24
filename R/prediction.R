@@ -7,7 +7,7 @@
 #' @return structure with parsed prediction and http response
 #' @export
 get_prediction <- function(project_hid, dataset_hid, result_hid){
-  api_url_prediction <- paste("https://mljar.com/api/", API_VERSION, "/predictions",
+  api_url_prediction <- paste(MLAR_API_PATH, API_VERSION, "/predictions",
                                "?project_id=", project_hid, "&dataset_id=",
                                dataset_hid, "&result_id=", result_hid, sep="")
   rp <- .get_json_from_get_query(api_url_prediction)

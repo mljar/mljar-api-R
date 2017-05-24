@@ -6,7 +6,7 @@
 #' @export
 get_datasets <- function(project_hid) {
   #' Gets list of available datasets
-  api_url_datasets <- paste("https://mljar.com/api/", API_VERSION, "/datasets?project_id=", project_hid, sep = "")
+  api_url_datasets <- paste(MLAR_API_PATH, API_VERSION, "/datasets?project_id=", project_hid, sep = "")
   rp <- .get_json_from_get_query(api_url_datasets)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -32,7 +32,7 @@ print.get_datasets <- function(x, ...) {
 #' @return structure with parsed dataset and response
 #' @export
 get_dataset <- function(dataset_hid) {
-  api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
+  api_url_dataset_hid <- paste(MLAR_API_PATH, API_VERSION, "/datasets/", dataset_hid, sep="")
   rp <- .get_json_from_get_query(api_url_dataset_hid)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -57,7 +57,7 @@ print.get_dataset <- function(x, ...) {
 #' @export
 delete_dataset <-function(dataset_hid){
   token <- .get_token()
-  api_url_dataset_hid <- paste("https://mljar.com/api/", API_VERSION, "/datasets/", dataset_hid, sep="")
+  api_url_dataset_hid <- paste(MLAR_API_PATH, API_VERSION, "/datasets/", dataset_hid, sep="")
   resp <- DELETE(api_url_dataset_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
     sprintf("Dataset <%s> succesfully deleted!", dataset_hid)
@@ -82,7 +82,7 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
   prediction_only <- as.integer(prediction_only)
 
   token <- .get_token()
-  api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/datasets" , sep="")
+  api_url_new_dataset <- paste(MLAR_API_PATH, API_VERSION, "/datasets" , sep="")
   data <- list(
     title = title,
     file_path = dst_path,
@@ -150,7 +150,7 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
 #'
 .accept_dataset_column_usage <- function(dataset_hid){
   token <- .get_token()
-  api_url_new_dataset <- paste("https://mljar.com/api/", API_VERSION, "/accept_column_usage/" , sep="")
+  api_url_new_dataset <- paste(MLAR_API_PATH, API_VERSION, "/accept_column_usage/" , sep="")
   data <- list(dataset_id = dataset_hid)
   resp <- POST(api_url_new_dataset, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
