@@ -9,7 +9,7 @@
 #' @export
 prediction_download <- function(prediction_hid){
   token <- .get_token()
-  api_url_preddown <- paste("https://mljar.com/api/", API_VERSION, "/download/prediction/" , sep="")
+  api_url_preddown <- paste(MLAR_API_PATH, API_VERSION, "/download/prediction/" , sep="")
   data <- list( prediction_id =  prediction_hid)
   resp <- POST(api_url_preddown, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")

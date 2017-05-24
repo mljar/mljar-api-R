@@ -29,7 +29,7 @@ upload_file <- function(project_hid, filepath){
 #'
 #' @return parsed htt response from MLJAR s3policy (check mljar api for more)
 .get_signed_url <- function(project_hid, filepath){
-  api_url_signed_url <- paste("https://mljar.com/api/", API_VERSION, "/s3policy/" , sep="")
+  api_url_signed_url <- paste(MLAR_API_PATH, API_VERSION, "/s3policy/" , sep="")
   fname = tail(strsplit(filepath, "/")[[1]], n=1)
   data <- list(project_hid = project_hid,
                fname = fname)

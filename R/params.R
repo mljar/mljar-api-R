@@ -1,7 +1,8 @@
 # MLJAR Constants
 #################
 
-API_VERSION <- "v1"
+MLAR_API_PATH <- "https://mljar.com/api/"
+API_VERSION   <- "v1"
 
 MLJAR_TASKS <- list( bin_class = 'Binary Classification',
                      regression = 'Regression'

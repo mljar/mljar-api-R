@@ -5,7 +5,7 @@
 #' @return structure with parsed projects and http response
 #' @export
 get_projects <- function() {
-  api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
+  api_url_projects <- paste(MLAR_API_PATH, API_VERSION, "/projects" , sep="")
   rp <- .get_json_from_get_query(api_url_projects)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -33,7 +33,7 @@ print.get_projects <- function(x, ...) {
 #' @return structure with parsed project and http response
 #' @export
 get_project <- function(hid) {
-  api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
+  api_url_project_hid <- paste(MLAR_API_PATH, API_VERSION, "/projects/", hid, sep="")
   rp <- .get_json_from_get_query(api_url_project_hid)
   resp <- rp$resp
   parsed <- rp$parsed
@@ -64,7 +64,7 @@ print.get_project <- function(x, ...) {
 create_project <-function(title, task, description=""){
   .verify_if_project_exists(title, task)
   token <- .get_token()
-  api_url_projects <- paste("https://mljar.com/api/", API_VERSION, "/projects" , sep="")
+  api_url_projects <- paste(MLAR_API_PATH, API_VERSION, "/projects" , sep="")
   data <- list(title = title,
                hardware = 'cloud',
                scope = 'private',
@@ -89,7 +89,7 @@ create_project <-function(title, task, description=""){
 #' @importFrom httr DELETE status_code
 delete_project <-function(hid){
   token <- .get_token()
-  api_url_project_hid <- paste("https://mljar.com/api/", API_VERSION, "/projects/", hid, sep="")
+  api_url_project_hid <- paste(MLAR_API_PATH, API_VERSION, "/projects/", hid, sep="")
   resp <- DELETE(api_url_project_hid, add_headers(Authorization = paste("Token", token)))
   if (status_code(resp)==204 || status_code(resp)==200){
     print(sprintf("Project <%s> succesfully deleted!", hid))

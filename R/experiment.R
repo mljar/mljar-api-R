@@ -5,7 +5,7 @@
 #' @return  structure with parsed experiments and http response
 #' @export
 get_experiments <- function(project_hid){
-  api_url_experiments <- paste("https://mljar.com/api/", API_VERSION, "/experiments",
+  api_url_experiments <- paste(MLAR_API_PATH, API_VERSION, "/experiments",
                                "?project_id=", project_hid, sep="")
   rp <- .get_json_from_get_query(api_url_experiments)
   resp <- rp$resp
@@ -33,7 +33,7 @@ print.get_experiments <- function(x, ...) {
 #' @return structure with parsed experiment and http response
 #' @export
 get_experiment <- function(experiment_hid){
-  api_url_experiment <- paste("https://mljar.com/api/", API_VERSION, "/experiments/",
+  api_url_experiment <- paste(MLAR_API_PATH, API_VERSION, "/experiments/",
                                experiment_hid, sep="")
   rp <- .get_json_from_get_query(api_url_experiment)
   resp <- rp$resp
@@ -65,7 +65,7 @@ print.get_experiment <- function(x, ...) {
 #' @importFrom jsonlite fromJSON
 create_experiment <- function(data){
   token <- .get_token()
-  api_url_create_experiment <- paste("https://mljar.com/api/", API_VERSION, "/experiments" , sep="")
+  api_url_create_experiment <- paste(MLAR_API_PATH, API_VERSION, "/experiments" , sep="")
   resp <- POST(api_url_create_experiment, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
   .check_response_status(resp, 201)

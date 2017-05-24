@@ -16,7 +16,7 @@ submit_predict_job <- function(project_hid, dataset_hid, result_hid){
                                             cv_models = 1),
                                        auto_unbox =TRUE)
               )
-  query <- paste("https://mljar.com/api/", API_VERSION, "/predict/" , sep="")
+  query <- paste(MLAR_API_PATH, API_VERSION, "/predict/" , sep="")
   resp <- POST(query, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
   .check_response_status(resp, 200, "Predict MLJAR job failed")

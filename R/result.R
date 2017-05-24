@@ -10,7 +10,7 @@
 #' @export
 get_results <- function(project_hid, experiment_hid){
   token <- .get_token()
-  api_url_results <- paste("https://mljar.com/api/", API_VERSION, "/results/" , sep="")
+  api_url_results <- paste(MLAR_API_PATH, API_VERSION, "/results/" , sep="")
   datares <- list( project_id =  project_hid,
                    experiment_id =  experiment_hid)
   resp <- POST(api_url_results, add_headers(Authorization = paste("Token", token)),
