@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mljar/mljar-api-R.svg?branch=master)](https://travis-ci.org/mljar/mljar-api-R)
+[![codecov](https://codecov.io/gh/mljar/mljar-api-R/branch/master/graph/badge.svg)](https://codecov.io/gh/mljar/mljar-api-R)
 
 # mljar-api-R
 
