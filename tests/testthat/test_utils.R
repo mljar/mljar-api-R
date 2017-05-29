@@ -7,13 +7,13 @@ test_that("test .get_token", {
 })
 
 test_that("test .get_json_from_get_query", {
-  query <- paste0("https://mljar.com/api/", API_VERSION, "/projects")
+  query <- paste0(MLAR_API_PATH, API_VERSION, "/projects")
   r <- .get_json_from_get_query(query)
   expect_equal(names(r), c("resp", "parsed"))
 })
 
 test_that("test .check_response_status", {
-  query <- paste0("https://mljar.com/api/", API_VERSION, "/projects")
+  query <- paste0(MLAR_API_PATH, API_VERSION, "/projects")
   r <- .get_json_from_get_query(query)
   expect_error(.check_response_status(r$resp, 200), NA)
   expect_error(.check_response_status(r$resp, 222, "omg"), "omg")
