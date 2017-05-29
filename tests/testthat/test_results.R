@@ -1,17 +1,10 @@
 library(mljar)
 context("Test experiment")
 
-task <- "bin_class"
-create_project('ds', task, 'some description')
-gp <- get_projects()
-for(i in 1:length(gp$projects)) {
-  if (gp$projects[[i]]$title=="ds"){
-    break
-  }
-}
-hid <- gp$projects[[i]]$hid
+pr_task <- "bin_class"
+pr <- create_project('ds', pr_task, 'some description')
+hid <- pr$hid
 
-pr_task <- gp$projects[[i]]$task
 file_from_resources <- "binary_part_iris_converted.csv"
 dataset1 <- add_dataset_if_not_exists(hid, file_from_resources, "test-exp1")
 
