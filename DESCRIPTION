@@ -3,7 +3,7 @@ Title: R API for MLJAR
 Version: 0.1.0
 Author: Dominik Krzemiński <raymon92@gmail.com>
 Maintainer: Piotr Płoński <contact@mljar.com>
-Description: This package is R API wrapper for mljar.com. It allows you to train Machine Learning models online. Visit mljar.com for more information.
+Description: This package provides an R API wrapper for 'mljar.com', a web service allowing for on-line training for machine learning models (see <https://mljar.com> for more information).
 License: MIT + file LICENSE
 URL: http://mljar.com, https://github.com/mljar/mljar-api-R
 BugReports: https://github.com/mljar/mljar-api-R/issues
