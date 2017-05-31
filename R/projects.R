@@ -77,7 +77,7 @@ create_project <-function(title, task, description=""){
   if (status_code(resp)==201){
     print(sprintf("Project '%s' succesfully created!", title))
   }
-  project_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  project_details <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"), simplifyVector = FALSE)
   return(project_details)
 }
 

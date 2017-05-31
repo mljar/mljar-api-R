@@ -99,13 +99,14 @@
       } else {
         eta = round(eta, 2)
       }
-      print(sprintf("initiated: %s, learning: %s, done: %s, error: %s | ETA: %s minutes",
-              res_stats$initiated_cnt, res_stats$learning_cnt, res_stats$done_cnt,
-              res_stats$error_cnt, eta))
+      cat("\r", sprintf(
+      "initiated: %s, learning: %s, done: %s, error: %s | ETA: %s minutes               ",
+          res_stats$initiated_cnt, res_stats$learning_cnt, res_stats$done_cnt,
+          res_stats$error_cnt, eta))
       Sys.sleep(WAIT_INTERVAL)
 
     }, silent=TRUE)
-    if(class(rtry)=="try-error"){
+    if(class(rtry) == "try-error"){
       warning(paste("There were some problems with your model: ", geterrmessage()))
     }
   }

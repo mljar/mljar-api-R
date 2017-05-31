@@ -102,7 +102,8 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
   if (status_code(resp)==201){
     print(sprintf("Dataset created!"))
   }
-  dataset_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  dataset_details <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"),
+                                        simplifyVector = FALSE)
   return(dataset_details)
 }
 

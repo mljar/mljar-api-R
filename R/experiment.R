@@ -72,7 +72,8 @@ create_experiment <- function(data){
   if (status_code(resp)==201){
     print(sprintf("Experiment succesfully created!"))
   }
-  experiment_details <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  experiment_details <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"),
+                                           simplifyVector = FALSE)
   return(experiment_details)
 }
 
