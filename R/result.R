@@ -16,7 +16,7 @@ get_results <- function(project_hid, experiment_hid){
   resp <- POST(api_url_results, add_headers(Authorization = paste("Token", token)),
                body = datares, encode = "form")
   .check_response_status(resp, 200)
-  parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  parsed <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"), simplifyVector = FALSE)
   structure(
     list(
       results = parsed,

@@ -14,7 +14,8 @@
   token <- .get_token()
   resp <- POST(query, add_headers(Authorization = paste("Token", token)),
                body = data, encode = "form")
-  parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
+  parsed <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"),
+                               simplifyVector = FALSE)
   .check_response_status(resp, 200)
   return(list(resp=resp, parsed=parsed))
 }
@@ -31,10 +32,9 @@
 .get_json_from_get_query <- function(query){
   token <- .get_token()
   resp <- GET(query, add_headers(Authorization = paste("Token", token)))
-  parsed <- jsonlite::fromJSON(content(resp, "text"), simplifyVector = FALSE)
-
+  parsed <- jsonlite::fromJSON(content(resp, "text", encoding = "UTF-8"),
+                               simplifyVector = FALSE)
   .check_response_status(resp, 200)
-
   return(list(resp=resp, parsed=parsed))
 }
 

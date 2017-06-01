@@ -16,7 +16,7 @@ prediction_download <- function(prediction_hid){
   .check_response_status(resp, 200, "Error in prediction download!")
   tmpfilepath <- paste0(tempfile(),".csv")
   file.create(tmpfilepath)
-  write(content(resp), file = tmpfilepath)
+  write(content(resp, encoding = "UTF-8"), file = tmpfilepath)
   prediction <- read.csv(tmpfilepath)
   file.remove(tmpfilepath)
   return(prediction)
