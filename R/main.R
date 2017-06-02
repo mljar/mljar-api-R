@@ -317,6 +317,7 @@ get_all_models <- function(project_title, exp_title) {
   # Look for project title
   flag.proj.title <- FALSE
   gp <- get_projects()
+  if (length(gp$projects) == 0) stop("Empty project list.")
   for(i in 1:length(gp$projects)) {
     if (gp$projects[[i]]$title == project_title){
       flag.proj.title <- TRUE
@@ -330,6 +331,7 @@ get_all_models <- function(project_title, exp_title) {
   # Look for experiment title
   flag.proj.exp <- FALSE
   ge <- get_experiments(prj_hid)
+  if (length(ge$experiments) == 0) stop("No experiments found.")
   for(i in 1:length(ge$experiments)) {
     if (ge$experiments[[i]]$title == exp_title){
       flag.proj.exp <- TRUE
