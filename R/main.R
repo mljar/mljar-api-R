@@ -176,30 +176,30 @@
 #' @param exp_title charcater with experiment title
 #' @param metric charcater with metric
 #' For binary classification there are metrics:
-#' - auc which is for Area Under ROC Curve
-#' - logloss which is for Logarithmic Loss
+#' "auc" which is for Area Under ROC Curve,
+#' "logloss" which is for Logarithmic Loss.
 #' For regression tasks:
-#' - rmse which is Root Mean Square Error
-#' - mse which is for Mean Square Error
-#' - mase which is for Mean Absolute Error
+#' "rmse" which is Root Mean Square Error,
+#' "mse" which is for Mean Square Error,
+#' "mase" which is for Mean Absolute Error.
 #' @param wait_till_all_done boolean saying whether function should wait
 #' till all models are done
 #' @param algorithms list of algorithms to use
 #' For binary classification task available algorithm are:
-#' - xgb which is for Xgboost
-#' - lgb which is for LightGBM
-#' - mlp which is for Neural Network
-#' - rfc which is for Random Forest
-#' - etc which is for Extra Trees
-#' - rgfc which is for Regularized Greedy Forest
-#' - knnc which is for k-Nearest Neighbors
-#' - logreg which is for Logistic Regression
+#' "xgb" which is for Xgboost,
+#' "lgb" which is for LightGBM
+#' "mlp which is for Neural Network,
+#' "rfc" which is for Random Forest,
+#' "etc" which is for Extra Trees,
+#' "rgfc" which is for Regularized Greedy Forest,
+#' "knnc" which is for k-Nearest Neighbors,
+#' "logreg" which is for Logistic Regression.
 #' For regression task there are available algorithms:
-#'   - xgbr which is for Xgboost
-#' - lgbr which is for LightGBM
-#' - rgfr which is for Regularized Greedy Forest
-#' - rfr which is for Random Forest
-#' - etr which is for Extra Trees
+#' "xgbr" which is for Xgboost,
+#' "lgbr" which is for LightGBM,
+#' "rgfr" which is for Regularized Greedy Forest,
+#' "rfr" which is for Random Forest,
+#' "etr" which is for Extra Trees.
 #' @param validation_kfolds number of folds to be used in validation
 #' @param validation_shuffle boolean which specify if shuffle samples before training
 #' @param validation_stratify boolean which decides whether samples will be
@@ -289,3 +289,4 @@ mljar_predict <- function(model, x_pred, project_title){
   }
   return(NULL)
 }
+

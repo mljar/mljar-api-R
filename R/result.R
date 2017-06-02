@@ -1,4 +1,4 @@
-#' #' Get results of MLJAR training
+#' Get results of MLJAR training
 #'
 #' @param project_hid character with project identifier
 #' @param experiment_hid character with experiment identifier
