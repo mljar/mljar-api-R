@@ -344,7 +344,6 @@ get_all_models <- function(project_title, exp_title) {
   if (exp$experiment$compute_now != 2){
     stop("Experiment still in progess. Wait till its done!")
   }
-  gp <- get_projects()
   curr_results <- get_results(prj_hid, exp_hid)
   tmp_sa <- sapply(curr_results$results,
              function(x) c(x$hid, x$model_type, x$metric_value, x$metric_type),
