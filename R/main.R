@@ -337,7 +337,7 @@ get_all_models <- function(project_title, exp_title) {
     }
   }
   if (flag.proj.exp == FALSE){
-    stop("MLJAR cannot find a experiment with such a title. Check and try again.")
+    stop("MLJAR cannot find an experiment with such a title. Check and try again.")
   }
   exp_hid <- ge$experiments[[i]]$hid
   exp <- get_experiment(exp_hid)
@@ -346,11 +346,13 @@ get_all_models <- function(project_title, exp_title) {
   }
   curr_results <- get_results(prj_hid, exp_hid)
   tmp_sa <- sapply(curr_results$results,
-             function(x) c(x$hid, x$model_type, x$metric_value, x$metric_type),
+             function(x) c(x$hid, x$model_type, x$metric_value,
+                           x$metric_type, x$validation_scheme),
              simplify = FALSE, USE.NAMES = TRUE)
   df_res <- t(as.data.frame(tmp_sa,
                             row.names = c("hid", "model_type",
-                                          "metric_value", "metric_type"),
+                                          "metric_value", "metric_type",
+                                          "validation_scheme"),
                             col.names = 1:length(tmp_sa)))
   return(df_res)
 }

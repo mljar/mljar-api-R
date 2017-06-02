@@ -9,7 +9,6 @@ hid <- pr$hid
 test_that("test add_new_dataset", {
   file_from_resources <- "binary_part_iris_converted.csv"
   expect_error(add_new_dataset(hid, file_from_resources, "title"), NA)
-#  Sys.sleep(3) # to ensure that project is created
 })
 
 
@@ -39,10 +38,11 @@ test_that("test delete_dataset", {
 })
 
 test_that( "test add_dataset_if_not_exists", {
-  file_from_resources <- file_from_resources <- "binary_part_iris_converted.csv"
-  expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"), NA)
-  expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"), "Dataset with the same name already exists")
+  file_from_resources <- "binary_part_iris_converted.csv"
+  expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"),
+               NA)
+  expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"),
+               "Dataset with the same name already exists")
 })
 
 delete_project(hid)
-
