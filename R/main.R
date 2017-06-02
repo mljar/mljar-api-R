@@ -202,7 +202,7 @@
 #' For binary classification task available algorithm are:
 #' "xgb" which is for Xgboost,
 #' "lgb" which is for LightGBM
-#' "mlp which is for Neural Network,
+#' "mlp" which is for Neural Network,
 #' "rfc" which is for Random Forest,
 #' "etc" which is for Extra Trees,
 #' "rgfc" which is for Regularized Greedy Forest,
@@ -304,17 +304,20 @@ mljar_predict <- function(model, x_pred, project_title){
 #' Gives data.frame with basic data of all models
 #'
 #' You can later get some specific model by calling
-#' e.g. `get_result(model_hid)`.
+#' e.g. `get_result(model_hid)'.
 #'
 #' @param project_title character with project title
 #' @param exp_title character with experiment title
 #'
-#' @return data.frame with hid", "model_type", "metric_value", "metric_type"
+#' @return data.frame with model's "hid", "model_type", "metric_value",
+#' "metric_type"
+#'
 #' @export
 get_all_models <- function(project_title, exp_title) {
   # Look for project title
   flag.proj.title <- FALSE
   gp <- get_projects()
+  if (length(gp$projects) == 0) stop("Empty project list.")
   for(i in 1:length(gp$projects)) {
     if (gp$projects[[i]]$title == project_title){
       flag.proj.title <- TRUE
@@ -328,6 +331,7 @@ get_all_models <- function(project_title, exp_title) {
   # Look for experiment title
   flag.proj.exp <- FALSE
   ge <- get_experiments(prj_hid)
+  if (length(ge$experiments) == 0) stop("No experiments found.")
   for(i in 1:length(ge$experiments)) {
     if (ge$experiments[[i]]$title == exp_title){
       flag.proj.exp <- TRUE
@@ -335,21 +339,22 @@ get_all_models <- function(project_title, exp_title) {
     }
   }
   if (flag.proj.exp == FALSE){
-    stop("MLJAR cannot find a experiment with such a title. Check and try again.")
+    stop("MLJAR cannot find an experiment with such a title. Check and try again.")
   }
   exp_hid <- ge$experiments[[i]]$hid
   exp <- get_experiment(exp_hid)
   if (exp$experiment$compute_now != 2){
     stop("Experiment still in progess. Wait till its done!")
   }
-  gp <- get_projects()
   curr_results <- get_results(prj_hid, exp_hid)
   tmp_sa <- sapply(curr_results$results,
-             function(x) c(x$hid, x$model_type, x$metric_value, x$metric_type),
+             function(x) c(x$hid, x$model_type, x$metric_value,
+                           x$metric_type, x$validation_scheme),
              simplify = FALSE, USE.NAMES = TRUE)
   df_res <- t(as.data.frame(tmp_sa,
                             row.names = c("hid", "model_type",
-                                          "metric_value", "metric_type"),
+                                          "metric_value", "metric_type",
+                                          "validation_scheme"),
                             col.names = 1:length(tmp_sa)))
   return(df_res)
 }

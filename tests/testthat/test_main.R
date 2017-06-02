@@ -33,9 +33,13 @@ test_that("test mljar_fit and mljar_predict integration test",{
 })
 
 test_that("test get_all_models integration test",{
+  expect_error(get_all_models("fullproject2", "x"),
+     "MLJAR cannot find an experiment with such a title. Check and try again.")
+  expect_error(get_all_models("f", "x"),
+     "MLJAR cannot find a project with such a title. Check and try again.")
   df <- get_all_models("fullproject2", expname)
-  expect_equal(colnames(df), c("hid", "model_type",
-                               "metric_value", "metric_type"))
+  expect_equal(colnames(df), c("hid", "model_type", "metric_value",
+                               "metric_type", "validation_scheme"))
 })
 
 projects <- get_projects()

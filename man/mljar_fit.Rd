@@ -29,29 +29,29 @@ mljar_fit(x, y, validx = NULL, validy = NULL, proj_title = NULL,
 
 \item{algorithms}{list of algorithms to use
 For binary classification task available algorithm are:
-- xgb which is for Xgboost
-- lgb which is for LightGBM
-- mlp which is for Neural Network
-- rfc which is for Random Forest
-- etc which is for Extra Trees
-- rgfc which is for Regularized Greedy Forest
-- knnc which is for k-Nearest Neighbors
-- logreg which is for Logistic Regression
+"xgb" which is for Xgboost,
+"lgb" which is for LightGBM
+"mlp" which is for Neural Network,
+"rfc" which is for Random Forest,
+"etc" which is for Extra Trees,
+"rgfc" which is for Regularized Greedy Forest,
+"knnc" which is for k-Nearest Neighbors,
+"logreg" which is for Logistic Regression.
 For regression task there are available algorithms:
-  - xgbr which is for Xgboost
-- lgbr which is for LightGBM
-- rgfr which is for Regularized Greedy Forest
-- rfr which is for Random Forest
-- etr which is for Extra Trees}
+"xgbr" which is for Xgboost,
+"lgbr" which is for LightGBM,
+"rgfr" which is for Regularized Greedy Forest,
+"rfr" which is for Random Forest,
+"etr" which is for Extra Trees.}
 
 \item{metric}{charcater with metric
 For binary classification there are metrics:
-- auc which is for Area Under ROC Curve
-- logloss which is for Logarithmic Loss
+"auc" which is for Area Under ROC Curve,
+"logloss" which is for Logarithmic Loss.
 For regression tasks:
-- rmse which is Root Mean Square Error
-- mse which is for Mean Square Error
-- mase which is for Mean Absolute Error}
+"rmse" which is Root Mean Square Error,
+"mse" which is for Mean Square Error,
+"mase" which is for Mean Absolute Error.}
 
 \item{wait_till_all_done}{boolean saying whether function should wait
 till all models are done}
