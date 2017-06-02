@@ -141,6 +141,20 @@
                               validation_stratify, validation_train_split,
                               tuning_mode, create_ensemble, single_algorithm_time_limit){
   task <- .obtain_task(y)
+  if (length(algorithms) == 0) {
+    algorithms <- ifelse(task == "reg",
+                         MLJAR_DEFAULT_ALGORITHMS$regression,
+                         MLJAR_DEFAULT_ALGORITHMS$bin_class)
+    warning(sprintf("You did not specify algorithms: defaults for task %s are %s",
+                    task, paste(algorithms, collapse=" ")))
+  }
+  if (nchar(metric) == 0) {
+    metric <- ifelse(task == "reg",
+                     MLJAR_DEFAULT_METRICS$regression,
+                     MLJAR_DEFAULT_METRICS$bin_class)
+    warning(sprintf("You did not specify metric: defaults for task %s are %s",
+                    task, paste(metric, collapse=" ")))
+  }
   # create project and datasets
   tmp_data_filename <- .data_to_file(x, y)
   project_details <- create_project(proj_title, task)
@@ -228,9 +242,6 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   if (is.null(exp_title)){
     proj_title <- paste0("Experiment", round(runif(1, 1, 999)))
   }
-  if (length(algorithms) == 0){
-    stop("You must specify non-empty vector of algorithms to use.")
-  }
   model <- .start_experiment(x, y, validx, validy, proj_title, exp_title, metric,
                              algorithms, validation_kfolds, validation_shuffle,
                              validation_stratify, validation_train_split,
@@ -288,5 +299,58 @@ mljar_predict <- function(model, x_pred, project_title){
     Sys.sleep(10)
   }
   return(NULL)
+}
+
+#' Gives data.frame with basic data of all models
+#'
+#' You can later get some specific model by calling
+#' e.g. `get_result(model_hid)`.
+#'
+#' @param project_title character with project title
+#' @param exp_title character with experiment title
+#'
+#' @return data.frame with hid", "model_type", "metric_value", "metric_type"
+#' @export
+get_all_models <- function(project_title, exp_title) {
+  # Look for project title
+  flag.proj.title <- FALSE
+  gp <- get_projects()
+  for(i in 1:length(gp$projects)) {
+    if (gp$projects[[i]]$title == project_title){
+      flag.proj.title <- TRUE
+      break
+    }
+  }
+  if (flag.proj.title == FALSE){
+    stop("MLJAR cannot find a project with such a title. Check and try again.")
+  }
+  prj_hid <- gp$projects[[i]]$hid
+  # Look for experiment title
+  flag.proj.exp <- FALSE
+  ge <- get_experiments(prj_hid)
+  for(i in 1:length(ge$experiments)) {
+    if (ge$experiments[[i]]$title == exp_title){
+      flag.proj.exp <- TRUE
+      break
+    }
+  }
+  if (flag.proj.exp == FALSE){
+    stop("MLJAR cannot find a experiment with such a title. Check and try again.")
+  }
+  exp_hid <- ge$experiments[[i]]$hid
+  exp <- get_experiment(exp_hid)
+  if (exp$experiment$compute_now != 2){
+    stop("Experiment still in progess. Wait till its done!")
+  }
+  gp <- get_projects()
+  curr_results <- get_results(prj_hid, exp_hid)
+  tmp_sa <- sapply(curr_results$results,
+             function(x) c(x$hid, x$model_type, x$metric_value, x$metric_type),
+             simplify = FALSE, USE.NAMES = TRUE)
+  df_res <- t(as.data.frame(tmp_sa,
+                            row.names = c("hid", "model_type",
+                                          "metric_value", "metric_type"),
+                            col.names = 1:length(tmp_sa)))
+  return(df_res)
 }
 
