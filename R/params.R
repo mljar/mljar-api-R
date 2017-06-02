@@ -44,11 +44,11 @@ MLJAR_TUNING_MODES <- list(Normal = list(random_start_cnt = 5, hill_climbing_cnt
 # MLJAR Defaults
 #################
 
-MLJAR_DEFAULT_METRICS  <- list(bin_class = 'logloss',
-                               regression = 'rmse')
+MLJAR_DEFAULT_METRICS  <- list(bin_class = "logloss",
+                               regression = "rmse")
 
-MLJAR_DEFAULT_ALGORITHMS <- list( bin_class = c('xgb', 'lgb', 'mlp'),
-                                  regression = c('xgbr', 'lgbr')
+MLJAR_DEFAULT_ALGORITHMS <- list( bin_class = c("xgb", "lgb"),
+                                  regression = c("xgbr", "lgbr")
                                 )
 
 MLJAR_DEFAULT_ENSEMBLE        = TRUE

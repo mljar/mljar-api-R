@@ -135,7 +135,7 @@
 #'
 #' @return "reg" or "bin_class" depending on kind of task
 #' @examples
-#' .obtain_task(c(1,0,0,1))
+#' .obtain_task(c(1, 0, 0, 1))
 .obtain_task <- function(y){
-  return(ifelse(nrow(as.data.frame(unique(y)))>2, "reg", "bin_class"))
+  return(ifelse(nrow(as.data.frame(unique(y))) > 2, "reg", "bin_class"))
 }
