@@ -64,7 +64,8 @@ test_that("test add_experiment_if_not_exists", {
   expect_error(add_experiment_if_not_exists(hid, dataset1$dataset, NULL, "exp-2",
                                pr_task, validation_kfolds, validation_shuffle,
                                validation_stratify, validation_train_split, algorithms, metric,
-                               tuning_mode, time_constraint, create_ensemble), "Please rename your new experiment with new parameters setup.")
+                               tuning_mode, time_constraint, create_ensemble),
+               "Please rename your new experiment with new parameters setup.")
 })
 
 delete_project(hid)

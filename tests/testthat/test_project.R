@@ -37,6 +37,11 @@ test_that("test delete_project and get_projects", {
   expect_equal(length(gp$projects), 1)
 })
 
+test_that("test print_all_projects", {
+  df <- print_all_projects()
+  expect_equal(colnames(df), c("hid", "title", "task", "description"))
+})
+
 test_that("test get_project, delete_project and get_projects", {
   gp <- get_projects()
   hid <- gp$projects[[1]]$hid

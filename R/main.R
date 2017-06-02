@@ -141,6 +141,20 @@
                               validation_stratify, validation_train_split,
                               tuning_mode, create_ensemble, single_algorithm_time_limit){
   task <- .obtain_task(y)
+  if (length(algorithms) == 0) {
+    algorithms <- ifelse(task == "reg",
+                         MLJAR_DEFAULT_ALGORITHMS$regression,
+                         MLJAR_DEFAULT_ALGORITHMS$bin_class)
+    warning(sprintf("You did not specify algorithms: defaults for task %s are %s",
+                    task, paste(algorithms, collapse=" ")))
+  }
+  if (nchar(metric) == 0) {
+    metric <- ifelse(task == "reg",
+                     MLJAR_DEFAULT_METRICS$regression,
+                     MLJAR_DEFAULT_METRICS$bin_class)
+    warning(sprintf("You did not specify metric: defaults for task %s are %s",
+                    task, paste(metric, collapse=" ")))
+  }
   # create project and datasets
   tmp_data_filename <- .data_to_file(x, y)
   project_details <- create_project(proj_title, task)
@@ -176,30 +190,30 @@
 #' @param exp_title charcater with experiment title
 #' @param metric charcater with metric
 #' For binary classification there are metrics:
-#' - auc which is for Area Under ROC Curve
-#' - logloss which is for Logarithmic Loss
+#' "auc" which is for Area Under ROC Curve,
+#' "logloss" which is for Logarithmic Loss.
 #' For regression tasks:
-#' - rmse which is Root Mean Square Error
-#' - mse which is for Mean Square Error
-#' - mase which is for Mean Absolute Error
+#' "rmse" which is Root Mean Square Error,
+#' "mse" which is for Mean Square Error,
+#' "mase" which is for Mean Absolute Error.
 #' @param wait_till_all_done boolean saying whether function should wait
 #' till all models are done
 #' @param algorithms list of algorithms to use
 #' For binary classification task available algorithm are:
-#' - xgb which is for Xgboost
-#' - lgb which is for LightGBM
-#' - mlp which is for Neural Network
-#' - rfc which is for Random Forest
-#' - etc which is for Extra Trees
-#' - rgfc which is for Regularized Greedy Forest
-#' - knnc which is for k-Nearest Neighbors
-#' - logreg which is for Logistic Regression
+#' "xgb" which is for Xgboost,
+#' "lgb" which is for LightGBM
+#' "mlp which is for Neural Network,
+#' "rfc" which is for Random Forest,
+#' "etc" which is for Extra Trees,
+#' "rgfc" which is for Regularized Greedy Forest,
+#' "knnc" which is for k-Nearest Neighbors,
+#' "logreg" which is for Logistic Regression.
 #' For regression task there are available algorithms:
-#'   - xgbr which is for Xgboost
-#' - lgbr which is for LightGBM
-#' - rgfr which is for Regularized Greedy Forest
-#' - rfr which is for Random Forest
-#' - etr which is for Extra Trees
+#' "xgbr" which is for Xgboost,
+#' "lgbr" which is for LightGBM,
+#' "rgfr" which is for Regularized Greedy Forest,
+#' "rfr" which is for Random Forest,
+#' "etr" which is for Extra Trees.
 #' @param validation_kfolds number of folds to be used in validation
 #' @param validation_shuffle boolean which specify if shuffle samples before training
 #' @param validation_stratify boolean which decides whether samples will be
@@ -227,9 +241,6 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   }
   if (is.null(exp_title)){
     proj_title <- paste0("Experiment", round(runif(1, 1, 999)))
-  }
-  if (length(algorithms) == 0){
-    stop("You must specify non-empty vector of algorithms to use.")
   }
   model <- .start_experiment(x, y, validx, validy, proj_title, exp_title, metric,
                              algorithms, validation_kfolds, validation_shuffle,
@@ -289,3 +300,57 @@ mljar_predict <- function(model, x_pred, project_title){
   }
   return(NULL)
 }
+
+#' Gives data.frame with basic data of all models
+#'
+#' You can later get some specific model by calling
+#' e.g. `get_result(model_hid)`.
+#'
+#' @param project_title character with project title
+#' @param exp_title character with experiment title
+#'
+#' @return data.frame with hid", "model_type", "metric_value", "metric_type"
+#' @export
+get_all_models <- function(project_title, exp_title) {
+  # Look for project title
+  flag.proj.title <- FALSE
+  gp <- get_projects()
+  for(i in 1:length(gp$projects)) {
+    if (gp$projects[[i]]$title == project_title){
+      flag.proj.title <- TRUE
+      break
+    }
+  }
+  if (flag.proj.title == FALSE){
+    stop("MLJAR cannot find a project with such a title. Check and try again.")
+  }
+  prj_hid <- gp$projects[[i]]$hid
+  # Look for experiment title
+  flag.proj.exp <- FALSE
+  ge <- get_experiments(prj_hid)
+  for(i in 1:length(ge$experiments)) {
+    if (ge$experiments[[i]]$title == exp_title){
+      flag.proj.exp <- TRUE
+      break
+    }
+  }
+  if (flag.proj.exp == FALSE){
+    stop("MLJAR cannot find a experiment with such a title. Check and try again.")
+  }
+  exp_hid <- ge$experiments[[i]]$hid
+  exp <- get_experiment(exp_hid)
+  if (exp$experiment$compute_now != 2){
+    stop("Experiment still in progess. Wait till its done!")
+  }
+  gp <- get_projects()
+  curr_results <- get_results(prj_hid, exp_hid)
+  tmp_sa <- sapply(curr_results$results,
+             function(x) c(x$hid, x$model_type, x$metric_value, x$metric_type),
+             simplify = FALSE, USE.NAMES = TRUE)
+  df_res <- t(as.data.frame(tmp_sa,
+                            row.names = c("hid", "model_type",
+                                          "metric_value", "metric_type"),
+                            col.names = 1:length(tmp_sa)))
+  return(df_res)
+}
+

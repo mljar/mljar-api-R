@@ -12,23 +12,30 @@ y.tr <- irisdata2[1:80,5]
 x.vl <- irisdata2[81:100,-5]
 y.vl <- irisdata2[81:100,5]
 
+expname <- "fullexp1"
+
 test_that("test mljar_fit reactions to bad arguments",{
-  expect_error(mljar_fit(x.tr, y.tr, validx=NULL, validy=NULL,
-                         proj_title="fullproject1", exp_title="fullexp1",
-                         algorithms = c(), metric = "logloss"),
-               "You must specify non-empty vector of algorithms to use."
+  expect_error(mljar_fit(NULL, NULL, validx=NULL, validy=NULL,
+                         proj_title="fullproject1", exp_title="fullexp2",
+                         algorithms = c("xgb"), metric = "logloss"),
+               "NULL data"
   )
 })
 
 test_that("test mljar_fit and mljar_predict integration test",{
-  expname <- "fullexp1"
   bs <- mljar_fit(x.tr, y.tr, validx=x.vl, validy=y.vl,
                   proj_title="fullproject2", exp_title=expname,
                   algorithms = c("logreg"), metric = "logloss")
   expect_equal(bs$experiment, expname)
   expect_equal(bs$status, "Done")
   expect_error(predvals <- mljar_predict(bs, x.vl, "fullproject2"), NA)
-  expect_equal(as.numeric(predvals>0.5), y.vl)
+  expect_equal(as.numeric(predvals > 0.5), y.vl)
+})
+
+test_that("test get_all_models integration test",{
+  df <- get_all_models("fullproject2", expname)
+  expect_equal(colnames(df), c("hid", "model_type",
+                               "metric_value", "metric_type"))
 })
 
 projects <- get_projects()

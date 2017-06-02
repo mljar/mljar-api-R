@@ -24,6 +24,24 @@ print.get_projects <- function(x, ...) {
   invisible(x)
 }
 
+#' Print all projects
+#'
+#' Gives data.frame with basic information about existing projects
+#'
+#' @return data.frame with projects
+#' @export
+print_all_projects <- function() {
+  projects <- get_projects()
+  tmp_sa <- sapply(projects$projects,
+                   function(x) c(x$hid, x$title, x$task, x$description),
+                   simplify = FALSE, USE.NAMES = TRUE)
+  df_proj <- t(as.data.frame(tmp_sa,
+                            row.names = c("hid", "title",
+                                          "task", "description"),
+                            col.names = 1:length(tmp_sa)))
+  return(df_proj)
+}
+
 #' Get project
 #'
 #' Get data from a project of specified hid
