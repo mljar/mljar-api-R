@@ -202,7 +202,7 @@
 #' For binary classification task available algorithm are:
 #' "xgb" which is for Xgboost,
 #' "lgb" which is for LightGBM
-#' "mlp which is for Neural Network,
+#' "mlp" which is for Neural Network,
 #' "rfc" which is for Random Forest,
 #' "etc" which is for Extra Trees,
 #' "rgfc" which is for Regularized Greedy Forest,
@@ -304,12 +304,14 @@ mljar_predict <- function(model, x_pred, project_title){
 #' Gives data.frame with basic data of all models
 #'
 #' You can later get some specific model by calling
-#' e.g. `get_result(model_hid)`.
+#' e.g. `get_result(model_hid)'.
 #'
 #' @param project_title character with project title
 #' @param exp_title character with experiment title
 #'
-#' @return data.frame with hid", "model_type", "metric_value", "metric_type"
+#' @return data.frame with model's "hid", "model_type", "metric_value",
+#' "metric_type"
+#'
 #' @export
 get_all_models <- function(project_title, exp_title) {
   # Look for project title
