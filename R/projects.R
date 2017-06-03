@@ -31,14 +31,17 @@ print.get_projects <- function(x, ...) {
 #' @return data.frame with projects
 #' @export
 print_all_projects <- function() {
+  columns = c("hid", "title", "task", "description")
   projects <- get_projects()
+  if (length(projects$projects) == 0) return(data.frame())
   tmp_sa <- sapply(projects$projects,
-                   function(x) c(x$hid, x$title, x$task, x$description),
+                   function(x) c(x$hid, x$title, x$task,
+                                 ifelse(!is.null(x$description), x$description, "")),
                    simplify = FALSE, USE.NAMES = TRUE)
   df_proj <- t(as.data.frame(tmp_sa,
-                            row.names = c("hid", "title",
-                                          "task", "description"),
+                            row.names = columns,
                             col.names = 1:length(tmp_sa)))
+  df_proj <- data.frame(df_proj, row.names = NULL)
   return(df_proj)
 }
 
