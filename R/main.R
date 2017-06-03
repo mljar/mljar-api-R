@@ -344,18 +344,19 @@ get_all_models <- function(project_title, exp_title) {
   exp_hid <- ge$experiments[[i]]$hid
   exp <- get_experiment(exp_hid)
   if (exp$experiment$compute_now != 2){
-    stop("Experiment still in progess. Wait till its done!")
+    stop("Experiment still in progress. Wait till its done!")
   }
   curr_results <- get_results(prj_hid, exp_hid)
+  column.names <- c("hid", "model_type", "metric_value",
+                    "metric_type", "validation_scheme")
   tmp_sa <- sapply(curr_results$results,
              function(x) c(x$hid, x$model_type, x$metric_value,
                            x$metric_type, x$validation_scheme),
              simplify = FALSE, USE.NAMES = TRUE)
   df_res <- t(as.data.frame(tmp_sa,
-                            row.names = c("hid", "model_type",
-                                          "metric_value", "metric_type",
-                                          "validation_scheme"),
+                            row.names = column.names,
                             col.names = 1:length(tmp_sa)))
+  df_res <- data.frame(df_res, row.names = NULL)
   return(df_res)
 }
 
