@@ -22,9 +22,13 @@ That's all folks! Yeah, I know, this makes Machine Learning super easy! You can 
 
 ## How to install
 
-You can install mljar with **devtools**:
+You can install mljar from **CRAN**:
 
-    devtools::install_github("mljar/mljar-api-R")
+  install.packages("mljar")
+
+Alternatively, you can insyall the last development version from GitHub using `devtools`:
+
+  devtools::install_github("mljar/mljar-api-R")
 
 ## How to use it
 
