@@ -157,7 +157,13 @@
   }
   # create project and datasets
   tmp_data_filename <- .data_to_file(x, y)
-  project_details <- create_project(proj_title, task)
+  tmp_proj_hid <- .check_if_project_exists(proj_title)
+  if (is.null(tmp_proj_hid))
+    project_details <- create_project(proj_title, task)
+  else {
+    print(sprintf("Project <%s> exists.", proj_title))
+    project_details <- get_project(tmp_proj_hid)$project
+  }
   ds_title <- paste0("Dataset", round(runif(1, 1, 999)))
   dataset <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
   if (!is.null(validx) && !is.null(validy)){
@@ -270,14 +276,7 @@ mljar_predict <- function(model, x_pred, project_title){
     stop("NULL data")
   }
   # look for project
-  projects <- get_projects()
-  proj_hid <- NULL
-  for(i in 1:length(projects$projects)) {
-    if (projects$projects[[i]]$title == project_title){
-      proj_hid <- projects$projects[[i]]$hid
-      break
-    }
-  }
+  proj_hid <- .check_if_project_exists(project_title)
   if (is.null(proj_hid)) stop("Project not found! Check title and try again.")
   # adding prediction dataset
   tmp_data_filename <- .data_to_file(x_pred)
@@ -316,18 +315,11 @@ mljar_predict <- function(model, x_pred, project_title){
 get_all_models <- function(project_title, exp_title) {
   # Look for project title
   flag.proj.title <- FALSE
-  gp <- get_projects()
-  if (length(gp$projects) == 0) stop("Empty project list.")
-  for(i in 1:length(gp$projects)) {
-    if (gp$projects[[i]]$title == project_title){
-      flag.proj.title <- TRUE
-      break
-    }
-  }
-  if (flag.proj.title == FALSE){
+  prj_hid <- .check_if_project_exists(project_title)
+  if (is.null(prj_hid)){
     stop("MLJAR cannot find a project with such a title. Check and try again.")
   }
-  prj_hid <- gp$projects[[i]]$hid
+
   # Look for experiment title
   flag.proj.exp <- FALSE
   ge <- get_experiments(prj_hid)

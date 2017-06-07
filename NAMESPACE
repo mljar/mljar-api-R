@@ -1,5 +1,6 @@
 export(add_dataset_if_not_exists)
 export(add_new_dataset)
+export(add_experiment_if_not_exists)
 export(create_experiment)
 export(create_project)
 export(delete_dataset)
