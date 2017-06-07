@@ -119,7 +119,7 @@ delete_project <-function(hid){
 
 # Helper project functions
 
-#' Verify_if_project_exists
+#' Verify if project exists
 #'
 #' Checks if there is no project with the same name and task.
 #'
@@ -135,4 +135,24 @@ delete_project <-function(hid){
     }
   }
   return(TRUE)
+}
+
+#' Checks if project exists
+#'
+#' It bases only on title and returns project's hid if it exists.
+#'
+#' @param project_title character with project title
+#'
+#' @return character of project with its identifier or NULL
+.check_if_project_exists <- function(project_title) {
+  projects <- get_projects()
+  proj_hid <- NULL
+  if (length(projects$projects) == 0) return(NULL)
+  for(i in 1:length(projects$projects)) {
+    if (projects$projects[[i]]$title == project_title){
+      proj_hid <- projects$projects[[i]]$hid
+      break
+    }
+  }
+  return(proj_hid)
 }
