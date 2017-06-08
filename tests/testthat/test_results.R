@@ -37,4 +37,10 @@ test_that("test get_results", {
   }
 })
 
+test_that("test get_model", {
+  rs <- get_results(hid, exp$hid)
+  model <- get_model(hid, exp$hid, rs$results[[1]]$hid)
+  expect_equal(model$hid, rs$results[[1]]$hid)
+})
+
 delete_project(hid)
