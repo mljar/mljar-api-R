@@ -173,9 +173,9 @@ add_new_dataset <- function(project_hid, filename, title, prediction_only=FALSE)
 add_dataset_if_not_exists <- function(project_hid, filename, title, prediction_only=FALSE){
   .wait_till_all_datasets_are_valid(project_hid)
   ds <- get_datasets(project_hid)
-  if (length(ds$datasets)>0){
+  if (length(ds$datasets)>0) {
     for(i in 1:length(ds$datasets)) {
-      if (ds$datasets[[i]]$title==title){
+      if (ds$datasets[[i]]$title == title) {
         stop("Dataset with the same name already exists")
       }
     }
