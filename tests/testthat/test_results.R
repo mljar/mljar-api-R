@@ -2,7 +2,8 @@ library(mljar)
 context("Test experiment")
 
 pr_task <- "bin_class"
-pr <- create_project('ds', pr_task, 'some description')
+pr_title <- "ds"
+pr <- create_project(pr_title, pr_task, 'some description')
 hid <- pr$hid
 
 file_from_resources <- "binary_part_iris_converted.csv"
@@ -34,6 +35,20 @@ test_that("test get_results", {
       expect_equal(length(r$results), 5)
       break
     }
+  }
+})
+
+test_that("test get_model for bad arguments", {
+expect_error(get_model("xasxasdasda", "a", "a"),
+             "MLJAR cannot find a project with such a title. Check and try again.")
+})
+
+test_that("test get_model for right arguments", {
+  exp_dd <- get_experiment(exp$hid)
+  if (exp_dd$experiment$compute_now == 2) {
+    rs <- get_results(hid, exp_dd$experiment$hid)
+    model <- get_model(pr_title, exp_dd$experiment$title, rs$results[[1]]$hid)
+    expect_equal(model$hid, rs$results[[1]]$hid)
   }
 })
 

@@ -101,33 +101,36 @@ create_experiment <- function(data){
 #'
 #' @return experiment details structure
 #' @export
-add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_dataset, experiment_title,
-                                         project_task, validation_kfolds, validation_shuffle,
-                                         validation_stratify, validation_train_split, algorithms, metric,
-                                         tuning_mode, time_constraint, create_ensemble){
-  if (!is.null(valid_dataset)){
+add_experiment_if_not_exists <- function(project_hid, train_dataset,
+                                         valid_dataset, experiment_title,
+                                         project_task, validation_kfolds,
+                                         validation_shuffle, validation_stratify,
+                                         validation_train_split, algorithms,
+                                         metric, tuning_mode, time_constraint,
+                                         create_ensemble) {
+  if (!is.null(valid_dataset)) {
     # check validation parameters
     validation = "With dataset"
   } else {
-    if (!is.null(validation_train_split)){
+    if (!is.null(validation_train_split)) {
       percents = round(validation_train_split * 100)
       validation = paste0("Split ", percents , "/", 100-percents)
-    } else{
+    } else {
       validation = paste0(validation_kfolds, "-fold CV")
     }
-    if (validation_shuffle){
+    if (validation_shuffle) {
       validation = paste0(validation, ", Shuffle")
     }
-    if (validation_stratify && project_task == 'bin_class'){
+    if (validation_stratify && project_task == 'bin_class') {
       validation = paste0(validation, ", Stratify")
     }
-    if (validation_stratify && project_task != 'bin_class'){
+    if (validation_stratify && project_task != 'bin_class') {
       warning("Cannot use stratify in validation for your project task.
               Omitting this option in validation.")
     }
   }
   # check metric parameters
-  if (is.null(metric) || metric == "" || !(metric %in% names(MLJAR_METRICS))){
+  if (is.null(metric) || metric == "" || !(metric %in% names(MLJAR_METRICS))) {
     metric = MLJAR_DEFAULT_METRICS[project_task]
   }
   # check tuning mode parameters
@@ -135,16 +138,16 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
     tuning_mode = MLJAR_DEFAULT_TUNING_MODE
   }
   # check algorithms parameters
-  if (is.null(algorithms) || length(algorithms) == 0 || algorithms == ""){
+  if (is.null(algorithms) || length(algorithms) == 0 || algorithms == "") {
     algorithms = MLJAR_DEFAULT_ALGORITHMS[project_task]
   }
   # set default preprocessing if needed
   dataset_preproc <- list()
   dataset_preproc$na_fill <- "na_fill_median"
-  if (length(train_dataset$column_usage_min['cols_to_fill_na']) > 0){
+  if (length(train_dataset$column_usage_min['cols_to_fill_na']) > 0) {
     dataset_preproc$na_fill <- "na_fill_median"
   }
-  if (length(train_dataset$column_usage_min['cols_to_convert_categorical']) > 0){
+  if (length(train_dataset$column_usage_min['cols_to_convert_categorical']) > 0) {
     dataset_preproc$convert_categorical <- "categorical_to_int"
   }
   if (length(dataset_preproc) == 0) dataset_preproc={}
@@ -166,7 +169,7 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset, valid_datas
   all_experiments = get_experiments(project_hid)
   if (length(all_experiments$experiments) > 0) {
     for(i in 1:length(all_experiments$experiments)) {
-      if (all_experiments$experiments[[i]]$title == experiment_title){
+      if (all_experiments$experiments[[i]]$title == experiment_title) {
         stop("The experiment with specified title already exists\nPlease rename your new experiment with new parameters setup.")
       }
     }

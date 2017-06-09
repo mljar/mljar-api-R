@@ -11,7 +11,7 @@ dataset1 <- add_dataset_if_not_exists(hid, file_from_resources, "test-exp1")
 
 validation_kfolds <- 5
 validation_shuffle <- TRUE
-validation_stratify <-TRUE
+validation_stratify <- TRUE
 validation_train_split <- NULL
 validation <- "5-fold CV, Shuffle, Stratify"
 algorithms <- c("xgb")
