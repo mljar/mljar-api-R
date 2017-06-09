@@ -81,7 +81,6 @@
   WAIT_INTERVAL    <- 10.0
   loop_max_counter <- 24*360 # 24 hours of maximum waiting
   results          <- NULL
-  #TODO: test that loop
   while(loop_max_counter > 0){
     loop_max_counter <- loop_max_counter - 1
     rtry <- try({
@@ -95,7 +94,7 @@
       eta <- .asses_total_training_time(exp, res_stats)
       if (res_stats$initiated_cnt + res_stats$learning_cnt +
           res_stats$done_cnt + res_stats$error_cnt == 0) {
-        eta <- 'estimating'
+        eta <- "estimating"
       } else {
         eta = round(eta, 2)
       }
@@ -124,6 +123,8 @@
 #' @param validy data.frame/matrix with validation labels
 #' @param proj_title charcater with project title
 #' @param exp_title charcater with experiment title
+#' @param dataset_title charcater with dataset title
+#' @param val_dataset_title charcater with validation dataset title
 #' @param metric charcater with metric
 #' @param algorithms list of algorithms to use
 #' @param validation_kfolds number of folds to be used in validation
@@ -136,7 +137,8 @@
 #' @param single_algorithm_time_limit numeric with time limit to calculate algorithm
 #'
 #' @return structure with the best model
-.start_experiment <- function(x, y, validx, validy, proj_title, exp_title, metric,
+.start_experiment <- function(x, y, validx, validy, proj_title, exp_title,
+                              dataset_title, val_ds_title, metric,
                               algorithms, validation_kfolds, validation_shuffle,
                               validation_stratify, validation_train_split,
                               tuning_mode, create_ensemble, single_algorithm_time_limit){
@@ -167,7 +169,8 @@
   ds_title <- ifelse(is.null(dataset_title),
                      paste0("Dataset", round(runif(1, 1, 999))),
                      dataset_title )
-  dataset <- add_dataset_if_not_exists(project_details$hid, tmp_data_filename, ds_title)
+  dataset <- add_dataset_if_not_exists(project_details$hid,
+                                       tmp_data_filename, ds_title)
   if (!is.null(validx) && !is.null(validy)){
     tmp_valid_data_filename <- .data_to_file(validx, validy)
     val_title <- ifelse(is.null(val_ds_title),
@@ -255,7 +258,8 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
   if (is.null(exp_title)){
     proj_title <- paste0("Experiment", round(runif(1, 1, 999)))
   }
-  model <- .start_experiment(x, y, validx, validy, proj_title, exp_title, metric,
+  model <- .start_experiment(x, y, validx, validy, proj_title, exp_title,
+                             dataset_title, val_dataset_title, metric,
                              algorithms, validation_kfolds, validation_shuffle,
                              validation_stratify, validation_train_split,
                              tuning_mode, create_ensemble,

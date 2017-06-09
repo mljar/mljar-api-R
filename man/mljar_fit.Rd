@@ -5,8 +5,9 @@
 \title{MLJAR FIT}
 \usage{
 mljar_fit(x, y, validx = NULL, validy = NULL, proj_title = NULL,
-  exp_title = NULL, algorithms = c(), metric = "",
-  wait_till_all_done = TRUE, validation_kfolds = MLJAR_DEFAULT_FOLDS,
+  exp_title = NULL, dataset_title = NULL, val_dataset_title = NULL,
+  algorithms = c(), metric = "", wait_till_all_done = TRUE,
+  validation_kfolds = MLJAR_DEFAULT_FOLDS,
   validation_shuffle = MLJAR_DEFAULT_SHUFFLE,
   validation_stratify = MLJAR_DEFAULT_STRATIFY,
   validation_train_split = MLJAR_DEFAULT_TRAIN_SPLIT,
@@ -26,6 +27,10 @@ mljar_fit(x, y, validx = NULL, validy = NULL, proj_title = NULL,
 \item{proj_title}{charcater with project title}
 
 \item{exp_title}{charcater with experiment title}
+
+\item{dataset_title}{charcater with dataset name}
+
+\item{val_dataset_title}{charcater with validation dataset name}
 
 \item{algorithms}{list of algorithms to use
 For binary classification task available algorithm are:

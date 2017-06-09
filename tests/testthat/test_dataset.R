@@ -41,8 +41,8 @@ test_that( "test add_dataset_if_not_exists", {
   file_from_resources <- "binary_part_iris_converted.csv"
   expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"),
                NA)
-  expect_error(add_dataset_if_not_exists(hid, file_from_resources, "title-1"),
-               "Dataset with the same name already exists")
+  expect_warning(add_dataset_if_not_exists(hid, file_from_resources, "title-1"),
+               "Dataset with the same name already exists: <title-1>")
 })
 
 delete_project(hid)

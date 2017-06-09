@@ -176,7 +176,10 @@ add_dataset_if_not_exists <- function(project_hid, filename, title, prediction_o
   if (length(ds$datasets)>0) {
     for(i in 1:length(ds$datasets)) {
       if (ds$datasets[[i]]$title == title) {
-        stop("Dataset with the same name already exists")
+        warning(sprintf("Dataset with the same name already exists: <%s>",
+                        title))
+        existing_ds <- list(dataset=ds$datasets[[i]], resp=NULL)
+        return(existing_ds)
       }
     }
   }
