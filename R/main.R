@@ -314,7 +314,7 @@ mljar_predict <- function(model, x_pred, project_title){
 #' Gives data.frame with basic data of all models
 #'
 #' You can later get some specific model by calling
-#' e.g. `get_result(model_hid)'.
+#' e.g. \code{mod <- get_model(project_title, experiment_title, model_hid)}.
 #'
 #' @param project_title character with project title
 #' @param exp_title character with experiment title

@@ -17,5 +17,5 @@ data.frame with model's "hid", "model_type", "metric_value",
 }
 \description{
 You can later get some specific model by calling
-e.g. `get_result(model_hid)'.
+e.g. \code{mod <- get_model(project_title, experiment_title, model_hid)}.
 }
