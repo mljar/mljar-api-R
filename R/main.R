@@ -294,9 +294,10 @@ mljar_predict <- function(model, x_pred, project_title){
   dspred_title <- paste0("Pred_dataset", round(runif(1, 1, 999)))
   pred_ds  <- add_dataset_if_not_exists(proj_hid, tmp_data_filename, dspred_title, TRUE)
   total_checks <- 1000
+  cat("Prediction download started")
   for (i in 1:total_checks){
     prediction <- get_prediction(proj_hid, pred_ds$dataset$hid, model$hid)
-    print(sprintf("Downloading prediction - %s", i))
+    cat("\r", sprintf("Downloading prediction - %s          ", i))
     # for first iteration we send dataset for prediction
     if (i == 1 && length(prediction$prediction) == 0) {
       submit_predict_job(proj_hid, pred_ds$dataset$hid, model$hid)
