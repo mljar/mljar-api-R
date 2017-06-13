@@ -143,7 +143,6 @@ add_experiment_if_not_exists <- function(project_hid, train_dataset,
   }
   # set default preprocessing if needed
   dataset_preproc <- list()
-  dataset_preproc$na_fill <- "na_fill_median"
   if (length(train_dataset$column_usage_min['cols_to_fill_na']) > 0) {
     dataset_preproc$na_fill <- "na_fill_median"
   }
