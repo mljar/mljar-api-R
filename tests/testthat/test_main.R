@@ -39,7 +39,7 @@ test_that("test get_all_models integration test",{
      "MLJAR cannot find a project with such a title. Check and try again.")
   df <- get_all_models("fullproject2", expname)
   expect_equal(colnames(df), c("hid", "model_type", "metric_value",
-                               "metric_type", "validation_scheme"))
+                               "metric_type", "validation_scheme", "experiment"))
 })
 
 projects <- get_projects()
