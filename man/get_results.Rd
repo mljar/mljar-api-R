@@ -2,7 +2,7 @@
 % Please edit documentation in R/result.R
 \name{get_results}
 \alias{get_results}
-\title{Get results of MLJAR training}
+\title{Gets results of MLJAR training}
 \usage{
 get_results(project_hid, experiment_hid)
 }
@@ -15,5 +15,5 @@ get_results(project_hid, experiment_hid)
 structure with parsed results and http response
 }
 \description{
-Get results of MLJAR training
+Gets results of MLJAR training
 }
