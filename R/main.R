@@ -349,7 +349,9 @@ get_all_models <- function(project_title, exp_title) {
   curr_results <- get_results(prj_hid, exp_hid)
   column.names <- c("hid", "model_type", "metric_value",
                     "metric_type", "validation_scheme", "experiment")
-  tmp_sa <- sapply(curr_results$results,
+  filter_curr_res <- curr_results$results[unlist(lapply(curr_results$results,
+                                          function(x) x$experiment==exp_title))]
+  tmp_sa <- sapply(filter_curr_res,
              function(x) c(x$hid, x$model_type, x$metric_value,
                            x$metric_type, x$validation_scheme, x$experiment),
              simplify = FALSE, USE.NAMES = TRUE)
