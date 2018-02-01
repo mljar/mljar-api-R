@@ -1,7 +1,7 @@
 Package: mljar
 Title: R API for MLJAR
-Version: 0.1.1
-Author: Dominik Krzemiński <raymon92@gmail.com>
+Version: 0.1.2
+Author: Dominik Krzemiński <raymon92@gmail.com>, Piotr Płoński <contact@mljar.com>
 Maintainer: Piotr Płoński <contact@mljar.com>
 Description: Provides an R API wrapper for 'mljar.com', a web service allowing for on-line training for machine learning models (see <https://mljar.com> for more information).
 License: MIT + file LICENSE

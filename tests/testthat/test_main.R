@@ -30,6 +30,10 @@ test_that("test mljar_fit and mljar_predict integration test",{
   expect_equal(bs$status, "Done")
   expect_error(predvals <- mljar_predict(bs, x.vl, "fullproject2"), NA)
   expect_equal(as.numeric(predvals > 0.5), y.vl)
+  # test running predict with model id
+  model_hid <- bs$hid
+  expect_error(predvals <- mljar_predict(model_hid, x.vl, "fullproject2"), NA)
+  expect_equal(as.numeric(predvals > 0.5), y.vl)
 })
 
 test_that("test get_all_models integration test",{

@@ -271,7 +271,7 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
 #'
 #' Makes prediction basing on trained model.
 #'
-#' @param model model or MLJAR result structure
+#' @param model model Id or MLJAR result structure
 #' @param x_pred data.frame/matrix data to predict
 #' @param project_title character with project title
 #'
@@ -280,6 +280,9 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
 mljar_predict <- function(model, x_pred, project_title){
   if (is.null(model)) {
     stop("Model cannot be null.")
+  }
+  if (is.atomic(model)) {
+    model <- list(hid = model)
   }
   # checking if prediction data is ok
   x_pred <- as.data.frame(x_pred)
