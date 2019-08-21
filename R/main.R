@@ -264,6 +264,7 @@ mljar_fit <- function(x, y, validx=NULL, validy=NULL,
                              validation_stratify, validation_train_split,
                              tuning_mode, create_ensemble,
                              single_algorithm_time_limit)
+  class(model) <- "mljar_model"
   return(model)
 }
 
